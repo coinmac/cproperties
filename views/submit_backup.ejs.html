@@ -1,0 +1,240 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">Submit new property</h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+    <!-- property area -->
+    <div class="content-area submit-property" style="background-color: #FCFCFC;">&nbsp;
+        <div class="container">
+            <div class="clearfix" > 
+                <div class="wizard-container"> 
+                    <% include ./partials/messages %>
+                    <div  class="wizard-card ct-wizard-orange" id="wizardProperty">
+                        <form action="/users/submit" method="post" enctype="multipart/form-data">         
+                            <input type="hidden" value="<%= userdata.userid %>" name="userid">              
+                            <div class="wizard-header">
+                                <h3>
+                                    <b>Submit</b> YOUR PROPERTY <br>
+                                    <small>Use this form to submit your property pictures and details.</small>
+                                </h3>
+                            </div>
+
+                            <ul>
+                                <li><a href="#step1" data-toggle="tab">Step 1 </a></li>
+                                <li><a href="#step2" data-toggle="tab">Step 2 </a></li>
+                                <li><a href="#step3" data-toggle="tab">Step 3 </a></li>
+                                <li><a href="#step4" data-toggle="tab">Finished </a></li>
+                            </ul>
+
+                            <div class="tab-content">
+
+                                <div class="tab-pane" id="step1">
+                                    <div class="row p-b-15  ">
+                                        <h4 class="info-text"> Let's start with the basic information (with validation)</h4>
+                                        <div class="col-sm-4 col-sm-offset-1">
+                                            <div class="picture-container">
+                                                <div class="picture">
+                                                    <img src="" alt="" id="featuredimg">
+                                                    Tip:<br>
+                                                    Provie accurate details of your property.
+                                                    
+                                                </div> 
+                                            </div>
+                                            
+                                            <input type="file" name="featuredimg" accept="image/*" onchange="document.getElementById('featuredimg').src = window.URL.createObjectURL(this.files[0])">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Property Name / Title <small>(required)</small></label>
+                                                <input name="propertyname" type="text" class="form-control" placeholder="Super villa ...">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Property price (In Naira) <small>(required)</small></label>
+                                                <input name="propertyprice" type="number" class="form-control" placeholder="3330000">
+                                            </div> 
+                                            <div class="form-group">
+                                                <label>Telephone <small>(empty if you want to use default phone number)</small></label>
+                                                <input name="phonenumber" type="text" class="form-control" placeholder="+1 473 843 7436" value="" pattern="\d*">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  End step 1 -->
+
+                                <div class="tab-pane" id="step2">
+                                    <h4 class="info-text"> How much your Property is Beautiful ? </h4>
+                                    <div class="row">
+                                        <div class="col-sm-12"> 
+                                            <div class="col-sm-12"> 
+                                                <div class="form-group">
+                                                    <label>Property Description :</label>
+                                                    <textarea name="propertydescription" id="editor" class="form-control editor"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Physical Location / Address :</label>
+                                                    <input name="physicallocation" id="physicallocation" class="form-control" >
+                                                </div> 
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Property State :</label>
+                                                    <select class="selectpicker states" id="states" data-live-search="true" data-live-search-style="begins" name="propertystate" title="Select your city">
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Property City :</label>
+                                                    <select class="selectpicker cities" data-live-search="true" data-live-search-style="begins" name="propertycity" title="Select your city">
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Property Status  :</label>
+                                                    <select id="basic" class="selectpicker show-tick form-control" name="propertystatus">
+                                                        <option> -Status- </option>
+                                                        <option>For Rent </option>
+                                                        <option>For Sale</option>
+                                                        <option>For Lease</option>  
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Property Type  :</label>
+                                                    <select id="basic" class="selectpicker show-tick form-control" name="propertytype">
+                                                        <option> -Type- </option>
+                                                        <option>New </option>
+                                                        <option>Used</option>
+                                                        <option>Land</option>  
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-12 padding-top-15" id="ame">
+                                                <h4 class="lead text-center">Add Available Amenities<br><small>Quantity 1 means yes</small></h4> 
+                                            <div class="col-sm-4 m-2" id="klon1" style="border:solid 1px rgb(204, 201, 201);">
+                                                <div class="form-group row">
+                                                    <div style="float:left;" class="col-lg-1">&#10004</div>
+                                                        <div class="col-lg-7">
+                                                            <select class="show-tick form-control amenities" name="amenities[]"></select>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <input type="number" class="form-control" name="quantity[]" placeholder="Quantity" value="1">
+                                                            
+                                                        </div>
+                                                        <a class="removebtn" href="#ame" style="position:absolute; right:0px; color:red;">&#x2718;</a>
+                                                        
+                                                </div>
+                                            </div> 
+                                             
+                                        </div> <div class="text-center"> <a href="#ame" id="cloneDiv" class="text-center btn btn-sm btn-primary">Add More Amenities</a></div>
+                                        
+                                        <br>
+                                    </div>
+                                </div>
+                                <!-- End step 2 -->
+
+                                <div class="tab-pane" id="step3">                                        
+                                    <h4 class="info-text">Give us somme images and videos ? </h4>
+                                    <div class="row">  
+                                        <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="property-images">Chose Images :</label>
+                                                    <input class="form-control" type="file" id="property-images" name="propertyimages" accept="image/*" multiple>
+                                                    <p class="help-block">Select multipel images for your property .</p>
+                                                </div>
+                                        </div>
+                                        <div class="col-sm-6"> 
+                                            <div class="form-group">
+                                                <label for="property-video">Property video :</label>
+                                                <input class="form-control" value="" placeholder="http://www.youtube.com, http://vimeo.com" name="property_video" type="text">
+                                            </div>                                             
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <label>Agents Notice / Warning :</label>
+                                            <textarea name="agentswarning" id="editor2" class="form-control editor" ></textarea>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label for="publishstatus">Publish State</label>
+                                            <select name="publishstatus" id="publishstatus" class="form-control">
+                                                <option value="Published" selected>Published</option>
+                                                <option value="Sold">Sold</option>
+                                                <option value="Rented">Rented</option>
+                                                <option value="Suspended">Suspended</option>
+                                                <option value="Leased">Leased</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  End step 3 -->
+
+
+                                <div class="tab-pane" id="step4">                                        
+                                    <h4 class="info-text"> Finished and submit </h4>
+                                    <div class="row">  
+                                        <div class="col-sm-12">
+                                            <div class="">
+                                                <p>
+                                                    <label><strong>Terms and Conditions</strong></label>
+                                                    By accessing or using  COINMAC PROPERTIES services, such as 
+                                                    posting your property advertisement with your personal 
+                                                    information on our website you agree to the
+                                                    collection, use and disclosure of your personal information 
+                                                    in the legal proper manner
+                                                </p>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="pterms"  checked required /> <strong>Accept terms and conditions.</strong>
+                                                    </label>
+                                                </div> 
+
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  End step 4 -->
+
+                            </div>
+
+                            <div class="wizard-footer">
+                                <div class="pull-right">
+                                    <input type='button' class='btn btn-next btn-primary' name='next' value='Next' />
+                                    <input type='submit' class='btn btn-finish btn-primary ' name='finish' value='Finish' />
+                                </div>
+
+                                <div class="pull-left">
+                                    <input type='button' class='btn btn-previous btn-default' name='previous' value='Previous' />
+                                </div>
+                                <div class="clearfix"></div>                                            
+                            </div>	
+                        </form>
+                    </div>
+                    <!-- End submit form -->
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>  
+    <script>tinymce.init({ selector:'#edit' });</script> -->

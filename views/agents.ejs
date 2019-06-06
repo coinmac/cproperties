@@ -1,0 +1,71 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">Agents</h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+    <!-- property area -->
+    <div class="content-area recent-property padding-top-40" style="background-color: #FFF;">
+        <div class="container">  
+            <div class="row">
+                <div class="col-md-12"> 
+                        <%if(adata.length > 0){%>
+                            <% adata.forEach(function(ud){ %>
+                                <div class=" col-sm-4 box">
+                                    <div class="dealer-widget" style="margin-bottom: 0px !important">
+                                        <div class="dealer-content">
+                                            <div class="inner-wrapper">
+                                    
+                                                <div class="clear">
+                                                    <div class="col-xs-4 col-sm-4 dealer-face">
+                                                        <a href="#">
+                                                            <img src="/<%=ud.profileimg%>" class="img-circle">
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-xs-8 col-sm-8">
+                                                        <h3 class="dealer-name">
+                                                            <a href=""><%=ud.fullname%></a>
+                                                            <span><%=ud.accounttype%></span>        
+                                                        </h3>
+                                                        <div class="dealer-social-media">
+                                                            <a class="twitter" target="_blank" href="<%=ud.twitter%>">
+                                                                <i class="fa fa-twitter"></i>
+                                                            </a>
+                                                            <a class="facebook" target="_blank" href="<%=ud.facebook%>">
+                                                                <i class="fa fa-facebook"></i>
+                                                            </a>
+                                                            <a class="linkedin" target="_blank" href="<%=ud.linkedin%>">
+                                                                <i class="fa fa-linkedin"></i>
+                                                            </a> 
+                                                            <a class="instagram" target="_blank" href="<%=ud.instagram%>">
+                                                                <i class="fa fa-instagram"></i>
+                                                            </a>       
+                                                        </div>
+                                    
+                                                    </div>
+                                                </div>
+                                    
+                                                <div class="clear">
+                                                    <hr>
+                                                    <ul class="dealer-contacts" style="margin-top: -20px !important;">                                       
+                                                        <li><i class="pe-7s-map-marker strong"> </i><%=ud.address%></li>
+                                                        <li><i class="pe-7s-mail strong"> </i> <%=ud.pemail%></li>
+                                                        <li><i class="pe-7s-call strong"> </i> <%=ud.phonenumber%></li>
+                                                    </ul>
+                                                    <p class="text-center"><a class="btn btn-primary" href="/properties/<%=ud.userid%>" role="button">View Info/Contact Agent</a></p>
+                                                </div>
+                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        <% }) } %>
+                </div>    
+            </div>
+           
+        </div>

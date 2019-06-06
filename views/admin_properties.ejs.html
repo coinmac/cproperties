@@ -1,0 +1,51 @@
+<div class="page-head"> 
+    <div class="container">
+        <div class="row">
+            <div class="page-head-content">
+                <h1 class="page-title">Properties List (Admin) </h1>               
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End page header -->
+
+<!-- property area -->
+<div class="properties-area recent-property" style="background-color: #FFF;">
+    <div class="container">  
+        <div class="row">             
+
+        <% if(properties.length > 0){ %>
+            
+            <table class="table table-sm table-inverse table-responsive">
+                <thead class="thead-default">
+                    <tr>
+                        <th>Property Name</th>
+                        <th>Agent</th>
+                        <th>Publish Type</th>
+                        <th>Agent's Credit</th>
+                        <th>Approval</th>
+                        <th>Remarks</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <% properties.forEach(function(property){ %>
+                        <tr>
+                            <td scope="row"><%=property.propertyname%></td>
+                            <td><%=property.userid%></td>
+                            <td><%=property.propertyname%></td>
+                            <td><%=property.publishtype%></td>
+                            <td><%=property.agentscredit%>
+                                <form action="/approve_property/:<%=property.propertyid%>" method="post">
+                                    <input name="propertyid" type="hidden" value="<%=property.propertyid%>">
+                                    <button type="submit">Approve</button>
+                                </form>
+                            </td>
+                            <td><%=property.remarks%></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+            </table>
+        <% } %> 
+        </div>              
+    </div>
+</div>

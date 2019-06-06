@@ -1,0 +1,205 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title"> <%=userdata.name%> | My Payments </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container">
+
+            <div class="col-md-6">
+                <div class="box-for overflow">
+                    <div class="col-md-12 col-xs-12 register-blocks">
+                        <h2>About Payment</h2> 
+                        <hr>
+                        <h3>What to Pay For</h3>
+                        <p>You can fund your account in order to access any of our premium services on this website.</p>
+                        <p>Some of these Premium Services include;
+                            <ul>
+                                <li>Periodic Subscription Plan <a href="/pricing" target="_blank">Learn more</a></li>
+                                <li>Indexing your properties on our;
+                                    <ul>
+                                        <li>Popular Section</li>
+                                        <li>Featured Section</li>
+                                        <li>Recommended Section</li>
+                                        <li>Similar Property Section</li>
+                                    </ul>
+                                </li>
+                                <li>Placing your property / real estate or any other advertisment on the adverts area</li>
+                            </ul>
+                        </p>
+                        <p>For information about our pricing and service plans. Please click <a href="/pricing" target="_blank">HERE</a></p>
+                        <hr>
+                        <h3>Making Payments</h3>
+                        <p>We have about three methods by which you can make payment for the services we render to you or fund your wallet in advance for future services.</p>
+                        <ul>
+                            <li>Method One: <br> Online Payment</li>
+                            <li>Method Two: <br> Mobile/ATM Money Transfer</li>
+                            <li>Method Three: <br> Bank Deposit</li>
+                        </ul>
+                        <a name="addnew"></a>
+                        <h3>Online Payment: </h3>
+                        <p>This is the fastest method as your payment transaction will be instantly initiated from our website or any other web payment platform. Your payment will be instantly acknowledged and confirmed using this option.</p>
+                        <p>To Make Online Payment to COINMAC Properties, simple fill this form by entering the amount you want to pay and click on Pay Now button</p>
+                        <p>
+                            <form id="payform">
+                                <script src="https://js.paystack.co/v1/inline.js"></script>
+                                <input type="hidden" value="<%=userdata.userid%>" name="userid">
+                                <input type="hidden" value="<%=userdata.name%>" name="depositorname">
+                                <input type="hidden" value="Online Payment" name="methodofpayment">
+                                <input type="hidden" value="FCMB" name="bankpaidto">
+                                <input type="hidden" name="payref" value="paystack">
+                                
+
+                                <div class="form-group">
+                                    <label for="pay_amount">Enter Amount (&#8358;)</label>
+                                    <input type="number" class="form-control" id="pay_amount" value="0" name="amountpaid">
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-default"  onclick="payWithPaystack()">Pay Now</button>
+                                </div>
+                            </form>
+
+                        </p>
+                        <hr>
+                        
+                        <h3>Mobile/ATM Money Transfer:</h3>
+
+                        <p>You can use any pay agent (interswitch QuickTeller, Webpay, Pay...), bank's internet or USSD Mobile platform to make payment in this website.</p>
+                        <p>Simply follow the necessary instruction on the payment provider's guide and send money to : <hr>
+                            <a name="banking"></a>
+                            Pay into any of these accounts;
+
+                            <h3>BANKING INFORMATION</h3>
+
+                            <br>Bank Name: FIRST CITY MONUMENT BANK PLC
+                            
+                            <br>Account Number: 0136506015
+                            
+                            <br>Account Name: COINMAC INT’L. LTD.
+
+                            
+                            <br>OR
+                            
+                            <br>Bank Name:ZENITH BANK PLC, OLUYOLE BRANCH, IBADAN
+                            
+                            <br>Account Number:1012790202
+                            
+                            <br>Account Name:COINMAC INTERNATIONAL LIMITED.
+                        </p>
+                        <p><strong>IMPORTANT</strong>: Please take note/ write down the reference number or DESC of your payment. This will enable us to verify your payment and credit your account accordingly.</p>
+                        
+
+                        <hr>
+
+                        <h3>Bank Deposit</h3>
+                        <p>
+                            We can also recieve money through bank deposit. Use the above Banking Information to send money to us.
+                            <strong>NOTE: </strong> Your Teller No: is your unique reference that can be used to verify your payment.
+                        </p>
+
+                        <h3>Payment Confirmation: </h3>
+                        <p>Note: If your payment is made using Method One Above. Then, there is no need of filling the payment confirmation form, otherwise, you will need to provide, your payment information using the Confirmation Form below.</p>
+                        <hr>
+                        <a name="confirm"></a>
+                        <div class="box-for overflow">                         
+                                <div class="col-md-12 col-xs-12 login-blocks">
+                                    <h2>Payment Confirmation Form : </h2> 
+
+                                    <form action="/users/paymentconfirmation" method="post">
+                                        <input id="hidden" type="hidden" value="<%=userdata.userid%>" name="userid">
+                                        <div class="form-group">
+                                            <label for="amountpaid">Amount paid: </label>
+                                            <input type="number" class="form-control" id="amountpaid" name="amountpaid">
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="payref">Payment Reference: <small>Pay Ref/DESC/Teller No</small></label>
+                                                <input type="text" class="form-control" id="payref" name="payref">
+                                            </div>
+                                        <div class="form-group">
+                                            <label for="depositorname">Depositor's Name: ( <small>As it appears on the message/teller</small> )</label>
+                                            <input type="text" class="form-control" id="depositorname" name="depositorname">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="methodofpayment">Method of Payment</label>
+                                            
+                                              <select class="form-control" name="methodofpayment" id="methodofpayment">
+                                                <option value="ATM Transfer">ATM Transfer</option>
+                                                <option value="Internet Transfer">Internet Transfer</option>
+                                                <option value="Mobile Transfer">Mobile Transfer</option>
+                                              </select>
+                                            
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="bankpaidto">Select Receiver's Bank</label>
+                                            
+                                                <select class="form-control" name="bankpaidto" id="bankpaidto">
+                                                <option value="FCMB">FIRST CITY MONUMENT BANK PLC - 0136506015</option>
+                                                <option value="ZENITH">ZENITH BANK PLC - 1012790202</option>
+                                                </select>
+                                            
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="paymentdate">Date of Payment</label>
+                                            <input type="date" class="form-control" id="paymentdate" name="paymentdate">
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-default">Submit</button>
+                                        </div>
+                                    </form>
+                                  
+                                </div>
+                                
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="box-for overflow">
+                        <% include ./partials/messages %>
+                    <h2>Payment History</h2><hr>
+                    <%if(payments.length > 0){%>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Particulars</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% payments.forEach(function(pay){%>
+
+                                
+                                <tr>
+                                    <td><%=pay.paymentdate%></td>
+                                    <td><%=pay.payref%> / <%=pay.bankpaidto%></td>
+                                    <td><%=pay.amountpaid%></td>
+                                    <td><%=pay.status%></td>
+
+                                </tr>
+                                <%})%>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 

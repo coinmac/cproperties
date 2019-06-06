@@ -1,0 +1,342 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">Submit new property</h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+    <!-- property area -->
+    <div class="content-area submit-property" style="background-color: #FCFCFC;">&nbsp;
+        <div class="container">
+            <div class="clearfix" > 
+                <div class="wizard-container"> 
+                    <% include ./partials/messages %>
+                    <div  class="wizard-card ct-wizard-orange" id="wizardProperty">
+                        <form action="/users/submit" method="post" enctype="multipart/form-data">         
+                            <input type="hidden" value="<%= userdata.userid %>" name="userid">   
+                            <input type="hidden" value="<%= propertyid %>" name="propertyid">          
+                            <div class="wizard-header">
+                                <h3>
+                                    <b>Submit</b> YOUR PROPERTY <br>
+                                    <small>Use this form to submit your property pictures and details.</small>
+                                </h3>
+                            </div>
+
+                            <ul>
+                                <li><a href="#step1" data-toggle="tab">Step 1 </a></li>
+                                <li><a href="#step2" data-toggle="tab">Step 2 </a></li>
+                                <li><a href="#step3" data-toggle="tab">Step 3 </a></li>
+                                <li><a href="#step4" data-toggle="tab">Finished </a></li>
+                            </ul>
+
+                            <div class="tab-content">
+
+                                <div class="tab-pane" id="step1">
+                                    <div class="row p-b-15  ">
+                                        <h4 class="info-text"> Let's start with the basic information (with validation)</h4>
+                                        
+                                        
+                                            <div class="row col-sm-12">      
+                                                <div class="col-sm-8">                                                  
+                                                                                     
+                                                    <div class="form-group">
+                                                        <label>Property Name / Title <small>(required)</small></label>
+                                                        <input name="propertyname" type="text" class="form-control" placeholder="Super villa ...">
+                                                    </div>
+                                                </div> 
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Property Offer  :</label>
+                                                        <select id="propertyoffer" class="selectpicker show-tick form-control" name="propertyoffer">
+                                                            <option value="For Sale" selected>For Sale</option>
+                                                            <option value="For Rent">For Rent </option>
+                                                            <option value="For Lease">For Lease</option>
+                                                            <option value="Land">Land</option>    
+                                                            <option value="Short-Let">Short-Let</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row col-sm-12">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Property price (In Naira) <small>*</small></label>
+                                                        <input name="propertyprice" type="number" class="form-control" placeholder="3330000">
+                                                    </div> 
+                                                </div>
+                                                
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Size (Square Feets) <small>~</small></label>
+                                                        <input name="propertysize" type="text" class="form-control" placeholder="1,2000 Sqrfts" value="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Property Category  :</label>
+                                                        <select id="propertycategory" class="selectpicker show-tick form-control" name="propertycategory">
+                                                            
+                                                            <option value="Commercial">Commercial </option>
+                                                            <option value="Office">Office</option>
+                                                            <option value="Villa">Villa</option>
+                                                            <option value="Apartment">Apartment</option>
+                                                            <option value="Condominium">Condominium</option>
+                                                            <option value="Residential" selected>Residential</option>  
+    
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row col-sm-12">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>No of Bedrooms<small>*</small></label>
+                                                            <input name="bedrooms" type="number" class="form-control" placeholder="1">
+                                                        </div> 
+                                                    </div>
+                                                    
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Bath rooms (Square Feets) <small>~</small></label>
+                                                            <input name="baths" type="number" class="form-control" placeholder="1" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Toilets <small>~</small></label>
+                                                                <input name="toilets" type="number" class="form-control" placeholder="1" value="">
+                                                            </div>
+                                                        </div>
+    
+                                                    <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                    <label>Parking Lots/Garages <small>~</small></label>
+                                                                    <input name="garage" type="number" class="form-control" placeholder="1" value="">
+                                                            </div>
+                                                    </div>
+    
+                                                </div>
+                                        
+                                    </div>
+
+                                    
+                                    <div class="alert alert-warning">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <strong>Tip: </strong> <small><em>* Required | ~ Optionl</em></small>
+                                    </div>
+                                    
+                                </div>
+                                <!--  End step 1 -->
+
+                                <div class="tab-pane" id="step2">
+                                    <h4 class="info-text"> Property Details? </h4>
+                                    <div class="row">
+                                        <div class="col-sm-12"> 
+                                            <div class="col-sm-12"> 
+                                                <div class="form-group">
+                                                    <label>Property Description :</label>
+                                                    <textarea name="propertydescription" id="editor" class="form-control editor"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Physical Location / Address :</label>
+                                                    <input name="physicallocation" id="physicallocation" class="form-control" >
+                                                </div> 
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>State/Provice:</label>
+                                                    <select class="selectpicker states" id="states" data-live-search="true" data-live-search-style="begins" name="propertystate" title="Select your city">
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>City :</label>
+                                                    <select class="selectpicker cities" data-live-search="true" data-live-search-style="begins" name="propertycity" title="Select your city">
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Offer Status  :</label>
+                                                    <select id="basic" class="selectpicker show-tick form-control" name="offerstatus">
+                                                        <option value="Available" selected>Available</option>
+                                                       
+                                                        <option value="Rented">Rented</option>
+                                                        <option value="Sealed">Sealed</option>  
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Physical Condition  :</label>
+                                                    <select id="basic" class="selectpicker show-tick form-control" name="physicalcondition">
+                                                      
+                                                        <option value="New" selected>New </option>
+                                                        <option value="Renovated">Renovated</option>
+                                                        <option value="Old">Old</option>
+                                                        <option value="Virgin Land">Virgin Land</option>
+                                                        <option value="Damaged">Damaged</option>  
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-12 padding-top-15" id="ame">
+                                                <h4 class="lead text-center">Add Available Amenities</h4> 
+                                            <div class="col-sm-4 m-2" id="klon1" style="border:solid 1px rgb(204, 201, 201);">
+                                                <div class="form-group row">
+                                                    <div style="float:left;" class="col-lg-1">&#10004</div>
+                                                        <div class="col-lg-7">
+                                                            <select class="show-tick form-control amenities" name="amenities[]">
+                                                                <option value="Add Amenities">Select Item</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <input type="number" class="form-control" name="quantity[]" placeholder="Quantity" value="1">
+                                                            
+                                                        </div>
+                                                        <a class="removebtn" href="#ame" style="position:absolute; right:0px; color:red;">&#x2718;</a>
+                                                        
+                                                </div>
+                                            </div> 
+                                             
+                                        </div> <div class="text-center"> <a href="#ame" id="cloneDiv" class="text-center btn btn-sm btn-primary">Add More Amenities</a></div>
+                                        
+                                        <br>
+
+                                        <div class="col-sm-12 padding-top-15" id="aame">
+                                                <h4 class="lead text-center">Add Additional Details<br><small>Your custom features</small></h4> 
+                                            <div class="col-sm-12 m-2" id="alon1" style="border:solid 1px rgb(204, 201, 201);">
+                                                <div class="form-group row">
+                                                    <div style="float:left;" class="col-lg-1">&#10004</div>
+                                                        <div class="col-lg-6">
+                                                            <label for="">Feature Title</label>
+                                                            <input type="text" class="form-control" name="aamenities[]" placeholder="e.g Air Conditioner" value="">
+                                                        </div>
+                                                        <div class="col-lg-5">
+                                                            <label for="">Value or Quantity</label>
+                                                            <input type="text" class="form-control" name="aquantity[]" placeholder="e.g. Yes">
+                                                            
+                                                        </div>
+                                                        <a class="removebtn" href="#aame" style="position:absolute; right:0px; color:red;">&#x2718;</a>
+                                                        
+                                                </div>
+                                            </div> 
+                                             
+                                        </div> <div class="text-center"> <a href="#aame" id="cloneAdiv" class="text-center btn btn-sm btn-primary">Add Additional Details</a></div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- End step 2 -->
+
+                                <div class="tab-pane" id="step3">                                        
+                                    <h4 class="info-text">Upload Property Images and videos ? </h4>
+                                    <div class="row">  
+                                        <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="property-images">Chose Images :</label>
+                                                    <input class="form-control" type="file" id="file" name="propertyimages" accept="image/*" multiple>
+                                                    <p class="help-block">Select multipel images for your property .</p>
+                                                </div>
+                                        </div>
+                                        <div class="col-sm-4"> 
+                                            <div class="form-group">
+                                                <label for="property-video">Property video <small>(e.g Youtube url, other video url)</small>:</label>
+                                                <input class="form-control" value="" placeholder="http://www.youtube.com, http://vimeo.com" name="property_video" type="text">
+                                            </div>                                             
+                                        </div>
+                                        <div class="col-sm-4">
+                                                <label for="publishstatus">Publish State</label>
+                                                <select name="publishstatus" id="publishstatus" class="form-control">
+                                                    <option value="Published" selected>Published</option>
+                                                    <option value="Sold">Sold</option>
+                                                    <option value="Rented">Rented</option>
+                                                    <option value="Suspended">Suspended</option>
+                                                    <option value="Leased">Leased</option>
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <label>Agent's Notice / Warning :</label>
+                                            <textarea name="agentswarning" id="editor2" class="form-control editor" ></textarea>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label for="viewcategory">Campaign Type <small><a href="/campaigns" target="_blank">Learn more about Campaign and Promotion</a></small></label>
+                                            <select name="viewcategory" id="viewcategory" class="form-control">
+                                                <option value="General" selected>General</option>
+                                                <option value="Featured">Featured</option>
+                                                <option value="Premium">Premium</option>                                            
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  End step 3 -->
+
+
+                                <div class="tab-pane" id="step4">                                        
+                                    <h4 class="info-text"> Finished and submit </h4>
+                                    <div class="row">  
+                                        <div class="col-sm-12">
+                                            <div class="">
+                                                <p>
+                                                    <label><strong>Terms and Conditions</strong></label>
+                                                    By accessing or using  COINMAC PROPERTIES services, such as 
+                                                    posting your property advertisement with your personal 
+                                                    information on our website you agree to the
+                                                    collection, use and disclosure of your personal information 
+                                                    in the legal proper manner
+                                                </p>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="pterms"  checked required /> <strong>Accept terms and conditions.</strong>
+                                                    </label>
+                                                </div> 
+
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  End step 4 -->
+
+                            </div>
+
+                            <div class="wizard-footer">
+                                <div class="pull-right">
+                                    <input type='button' class='btn btn-next btn-primary' name='next' value='Next' />
+                                    <input type='submit' class='btn btn-finish btn-primary ' name='finish' value='Finish' />
+                                </div>
+
+                                <div class="pull-left">
+                                    <input type='button' class='btn btn-previous btn-default' name='previous' value='Previous' />
+                                </div>
+                                <div class="clearfix"></div>                                            
+                            </div>	
+                        </form>
+                    </div>
+                    <!-- End submit form -->
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>  
+    <script>tinymce.init({ selector:'#edit' });</script> -->

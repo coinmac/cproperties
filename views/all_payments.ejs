@@ -1,0 +1,67 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title"> <%=userdata.name%> | All Payments </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container">
+
+            
+
+            <div class="col-md-12">
+                <div class="box-for overflow">
+                        <% include ./partials/messages %>
+                    <h2>All Payment History</h2><hr>
+                    <%if(payments.length > 0){%>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Particulars</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% payments.forEach(function(pay){%>
+
+                                
+                                <tr>
+                                    <td><%=pay.paymentdate%></td>
+                                    <td><%=pay.payref%> / <%=pay.bankpaidto%></td>
+                                    <td><%=pay.amountpaid%></td>
+                                    <td><%=pay.status%></td>
+                                    <td>
+                                        <div class="button-group">
+                                            
+                                            <a href="delete/<%=pay.payid%>" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="payment/<%=pay.userid%>/<%=pay.payid%>" class="btn btn-info btn-sm">View</a>
+                                            <%if(pay.status!='Confirmed'){%>
+                                                <a href="approve/<%=pay.payid%>" class="btn btn-success btn-sm">Approve</a>
+                                            <%}%>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <%})%>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 

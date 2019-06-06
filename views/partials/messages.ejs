@@ -1,0 +1,53 @@
+<% if(typeof errors !='undefined') { %>
+<div class="alert alert-warning alert-dismissible show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <strong>Error Singing up!: </strong><br>
+    <ul>
+        <% errors.forEach(function(error){ %>     
+        <li class="p-4" style="padding-left: 10px; margin-left: 10px;"><%= error.msg %></li>
+        <% }); %>
+    </ul>
+</div>
+<% } %>
+
+<% if(success_msg!='') { %>
+    <div class="alert alert-success alert-dismissible show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>Success!: </strong><br>      
+                
+            <p class="p-4" style="padding-left: 10px; margin-left: 10px;"><%= success_msg %></p>
+        
+    </div>
+<% } %>
+
+<% if(success!='') { %>
+    <div class="alert alert-success alert-dismissible show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>Success!: </strong><br>      
+                
+            <p class="p-4" style="padding-left: 10px; margin-left: 10px;"><%= success %></p>
+        
+    </div>
+<% } %>
+
+<% if(error!='') { %>
+    <div class="alert alert-warning alert-dismissible show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>Success!: </strong><br>      
+                
+            <p class="p-4" style="padding-left: 10px; margin-left: 10px;"><%= error %></p>
+        
+    </div>
+<% } %>

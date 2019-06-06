@@ -1,0 +1,82 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">Payment Info </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container">
+
+            
+
+            <div class="col-md-8 col-md-offset-2">
+                <div class="box-for overflow">
+                    <% include ./partials/messages %>
+                    
+                    <% if(paymentdata){pay = paymentdata  %>
+                        <div class="col-md-8">
+                            <div class="button-group">
+                                <a href="#"  onClick="javascript:history.go(-1)" class="btn btn-warning btn-sm">Back</a>
+                                <a href="/users/approve/<%=pay.payid%>" class="btn btn-success btn-sm">Approve</a>
+                                <a href="/users/delete/<%=pay.payid%>" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </div>
+                            <table class="table table-light">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Paid By</td>
+                                        <td><%=pay.depositorname%></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>User ID:</th>
+                                        <th><%=pay.userid%></th>
+                                    </tr>
+                                    <tr>
+                                        <td>Amount Paid</td>
+                                        <td><%=pay.amountpaid%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Method of Payment</td>
+                                        <td><%=pay.methodofpayment%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Paid To</td>
+                                        <td><%=pay.bankpaidto%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payment Reference</td>
+                                        <td><%=pay.payref%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date Paid</td>
+                                        <td><%=pay.paymentdate%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>PayID</td>
+                                        <td><%=pay.payid%></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 

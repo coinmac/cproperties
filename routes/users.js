@@ -1,0 +1,643 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const moment = require('moment');
+const app = express();
+
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+
+const { ensureAuthenticated } = require('../config/auth');
+
+const fs = require('fs-extra');
+
+//Require all models
+const User = require('../models/User');
+const Property = require('../models/Property');
+const Profile = require("../models/Profile");
+const Photos = require("../models/Photos");
+const Amenities = require("../models/Amenities");
+const Payment = require("../models/Payment");
+
+const uniqueRandom = require('unique-random');
+const rand = uniqueRandom(100, 999);
+var randomstring = require("randomstring");
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+//Bodyparser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+const router = express.Router();
+
+const storage = multer.diskStorage({
+    //destination: './public/users/',
+    destination: function (req, file, callback) {
+        const userid = req.body.userid;
+        const propertyid = req.body.propertyid;
+        console.log(propertyid);
+        
+        upload_path = "public/users/"+userid+'/'+propertyid+'/';
+        mkdirp(upload_path, function (err) {
+            if (err) console.error(err)
+            else {
+                console.log('Directory created');
+                //setting destination.
+                callback(null, upload_path);
+            }
+        });
+
+    },
+    filename: function(req, file, cb){
+        cb(null, req.body.userid+req.body.propertyid+'-'+Date.now()+rand()+path.extname(file.originalname));
+    }    
+});
+// Profile Picture Storage
+const pstorage = multer.diskStorage({
+    //destination: './public/users/',
+    destination: function (req, file, callback) {
+        const userid = req.body.userid;
+        const propertyid = req.body.propertyid;
+        upload_path =  "public/users/"+userid+'/';
+        mkdirp(upload_path, function (err) {
+            if (err) console.error(err)
+            else {
+                console.log('Directory created');
+                //setting destination.
+                callback(null, upload_path);
+            }
+        });
+
+    },
+    filename: function(req, file, cb){
+        cb(null, req.body.userid+path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {fileSize: 1000000*90},
+    fileFilter: function(req, file, cb){
+        checkFileType(file, cb);
+    }
+    
+});
+
+const ppupload = multer({
+    storage: pstorage,
+    limits: {fileSize: 1000000},
+    fileFilter: function(req, file, cb){
+        checkFileType(file, cb);
+    }
+});
+
+// Check File Type
+function checkFileType(file, cb){
+    //Allowed Ext
+    const filetypes = /jpeg|jpg|png|gif/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    //Check Mime
+    const mimetype = filetypes.test(file.mimetype);
+
+    if(mimetype && extname){
+        return cb(null, true);
+    } else {
+        cb('Error: Images Only!');
+    }
+}
+
+var requiresAdmin = function() {
+    return [
+      ensureLoggedIn('/users/login'),
+      function(req, res, next) {
+        if (req.user && req.user.isAdmin === true)
+          next();
+        else
+          res.render(401);
+      }
+    ]
+  };
+
+// Dashboard
+router.get('/submit', ensureAuthenticated, (req, res) =>
+    res.render('submit', { 
+        userdata: req.user
+        , propertyid: rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'uppercase'})
+        , layout : 'userlayout'
+        , active: 'active'
+    })
+);
+
+router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
+    
+    const {
+        userid,
+        propertyid,
+        propertyname,
+        propertyoffer,
+        propertysize,
+        propertycategory,
+        offerstatus,
+        physicalcondition,
+        propertyprice,
+        phonenumber,
+        propertydescription,
+        physicallocation,
+        propertystate,
+        propertycity,
+        viewcategory,
+        propertytype,
+        bedrooms,
+        baths,
+        garage,
+        property_video,
+        agentswarning,
+        pterms } = req.body;    
+    
+    // Create variables from the Property form
+    const publishstatus = "Not Approved"; 
+    const featuredthumb = req.files[0].filename;
+    console.log(featuredthumb)
+    const newProperty = new Property({   
+        userid,     
+        featuredimg: featuredthumb,
+        propertyname,
+        propertyoffer,
+        propertysize,
+        propertycategory,
+        offerstatus,
+        physicalcondition,
+        propertyprice,
+        phonenumber,
+        propertydescription,
+        physicallocation,
+        propertystate,
+        propertycity,
+        viewcategory,
+        propertytype,
+        bedrooms,
+        baths,
+        garage,
+        property_video,
+        agentswarning,
+        pterms,
+        publishstatus,
+        propertyid,
+        approval: 'Unapproved'
+    });
+    // Copy Files to User Folder    
+    //fs.copySync(path.resolve(__dirname,'./public/users/xxx.json'), 'xxx.json');
+    // Save Text to Database
+   
+    newProperty.save()    
+    .then( user => {
+        req.flash('success_msg', 'Your property has been published successfully');
+        res.redirect('back');
+    })
+    .catch(err => console.log(err));
+    
+    // Save files
+    if(req.files){
+        req.files.forEach(function(property, key) {
+            
+            console.log(property.filename);
+            const newGallery = new Photos({   
+            userid,     
+            filename : property.filename,
+            propertyid
+            });
+
+            newGallery.save();
+        });
+            
+    }
+    // Save Amenities
+    if(req.body.amenities.length==1 && req.body.amenities[0]!="Add Amenities"){
+    for (var i = 0; i < req.body.amenities.length; i++) {   
+            
+        console.log(req.body.amenities[i]);
+        const newAmenity = new Amenities({   
+        userid,
+        propertyid,
+        amenityname: req.body.amenities[i],     
+        quantity: req.body.quantity[i],
+        additional: 'a'
+        });
+
+        newAmenity.save();
+    }};
+    
+    // Save Amenities
+    if(req.body.aamenities.length==1 && req.body.aamenities[0]!=""){
+    for (var i = 0; i < req.body.aamenities.length; i++) {   
+            
+        console.log(req.body.aamenities[i]);
+        const newAmenity = new Amenities({   
+        userid,
+        propertyid,
+        amenityname: req.body.aamenities[i],     
+        quantity: req.body.aquantity[i],
+        additional: "aa"
+        });
+
+        newAmenity.save();
+    }};
+
+});
+
+router.post("/update-profile", ensureAuthenticated, (req, res) => {
+    const profileimg = req.body.profileimg;
+    let errors = [];
+    const {        
+        accounttype,
+        accountplan,
+        fullname,
+        pemail,
+        facebook,
+        twitter,    
+        linkedin,
+        instagram,    
+        generalinfo,
+        accountstatus,
+        phonenumber,
+        address,
+        website,
+        credit        
+        } = req.body;
+    
+        console.log(req.body);
+
+        // Check required fields
+        picture = req.body.profileimg;
+        // if(picture.search(/placeholder/)!="-1"){
+        if(picture==""){
+            profilecompletion = "No";
+            errors.push({msg: 'You need to complete your profile by uploading profile image and entering your general information. This will encourage other users/agents to trust you.'})
+        }else{
+            profilecompletion = "Yes";
+            req.flash('success_msg', 'Thank you for completing your profile!');
+        }
+    
+    var updatedProfile = { $set: {              
+        accounttype,
+        accountplan,
+        fullname,
+        pemail,
+        facebook,
+        twitter,
+        linkedin,
+        instagram,
+        profileimg,
+        generalinfo,
+        accountstatus,
+        phonenumber,
+        address,
+        website,
+        profilecompletion,
+        credit
+    } } 
+    
+    Profile.findOneAndUpdate({'userid' : req.body.userid}, updatedProfile, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+    req.flash('success_msg', ' Your Profile has been updated successfully');
+    res.redirect('back');
+        
+});
+
+router.post('/uploadprofilepic', ppupload.single('profileimg'), (req, res, next) => {
+    const file = req.file
+    if (!file) {
+      const error = new Error('Please upload a file')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+    const profileimg = 'users/'+req.body.userid+'/'+file.filename;
+    console.log(profileimg); 
+
+        Profile.findOneAndUpdate({'userid' : req.body.userid}, { $set: { profileimg } }, { upsert: true }, function(err, data) {
+       
+            if (err){
+                console.log(err);
+                }
+            
+            });
+
+        req.flash('success_msg', ' Your Profile Image has been updated successfully');
+        res.redirect('back');
+    
+    
+});
+
+//Upload Profile Picture
+router.post('/uploadprofilepic',  ensureAuthenticated, (req, res) => {
+    const profileimg = req.body.profileimg;
+    console.log(profileimg);
+
+    ppupload(req, res, (err) =>{
+        if(err){
+            console.log(err);
+        }else{
+            console.log(req.file);
+        }           
+
+        Profile.findOneAndUpdate({'userid' : req.body.userid}, { $set: { profileimg } }, { upsert: true }, function(err, data) {
+       
+            if (err){
+                console.log(err);
+                }
+            
+            });
+
+        req.flash('success_msg', ' Your Profile Image has been updated successfully');
+        res.redirect('back');
+    });
+});
+
+//Register Page 
+router.get('/register', (req, res) => res.render('register'));
+
+router.post('/register', (req, res) => {
+    console.log(req.body);
+    // res.send('hello');
+    
+    const { name, lastname, email, password, password2 } = req.body;
+    let errors = [];
+    
+    // Check required fields
+    if(!name || !lastname  || !email || !password || !password2){
+        errors.push({msg: 'Please fill in all required fields'})
+    }
+
+    if(password !== password2){
+        errors.push({msg: 'Passwords do not match'});
+    }
+
+    // Check password length
+    if(password.length < 6){
+        errors.push({msg: 'Password should be at least 6 characters'});
+    }
+
+    if(errors.length > 0){
+        res.render('register',{
+            errors,
+            name,
+            lastname,
+            email,
+            password,
+            password2
+        });
+    } else{
+        // Validation Passed
+        User.findOne({ email: email })
+        .then(user => {
+            if(user) {
+                // User Exists
+                errors.push({msg: 'Email is already registered!'});
+                res.render('register',{
+                    errors,
+                    name,
+                    lastname,
+                    email,
+                    password,
+                    password2
+                });
+            }else{
+                // const userid = rand();
+                const userid = rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'lowercase'});
+                const newUser = new User({
+                    userid,
+                    name,
+                    lastname,
+                    email,
+                    password
+                });
+
+                const newProfile = new Profile({
+                    userid,
+                    accounttype: 'User',
+                    pemail: email,
+                    accountstatus: 'Not Activated',
+                    phonenumber: '',
+                    address: '',
+                    profileimg:'/assets/img/picture_placeholder.png',
+                    profilecompletion: 'No',
+                    fullname: name+' '+lastname,
+                    credit: 0,
+                    accountplan: 'Free'
+
+                });
+
+                newProfile.save().catch(err => console.log(err));
+
+                // Hash Password
+                bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.password, salt, (error, hash) => {
+                    if(err) throw err;
+                    // Set password to hashed
+                    newUser.password = hash;
+                    // Save user
+                    newUser.save()
+                    .then( user => {
+                        var dir = './public/users/'+userid;
+                        if (!fs.existsSync(dir)){
+                            fs.mkdirSync(dir);
+                        }
+
+                        req.flash('success_msg', 'Thank you for signing up with us. We have sent an activation link to the e-mail that you provided! Click on the link to activate your account and start submitting properties. Welcome!');
+                        res.redirect('/users/login');
+                    })
+                    .catch(err => console.log(err));
+                }));
+            }
+        });
+    } 
+
+    console.log(req.body);
+
+});
+//Login Page
+router.get('/login', (req, res) => res.render('login'));
+// Login Handle
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+});
+// Dashboard
+router.get('/uploadimage', (req, res) => 
+    res.render('uploadimage', {
+        userdata: req.user
+        , layout : 'userlayout'
+    })
+);
+// Logout handle
+router.get('/logout', (req, res) => {
+    req.logout();
+    req.flash('success_msg', 'You are now logged out. Log in again?');
+    res.redirect('/users/login');
+});
+// Logout handle
+router.get('/myproperties', ensureAuthenticated, (req, res) => 
+    // mongoose operations are asynchronous, so you need to wait 
+    Property.find({'userid':req.user.userid}, function(err, data) {
+        // console.log(data);
+        // note that data is an array of objects, not a single object!
+        if(err)
+            return console.log(err);
+        res.render('myproperties', {
+            userdata : req.user
+            , myproperties: data
+            , layout : 'userlayout'
+            , active: 'active'
+        });
+    })
+);
+// Dashboard
+router.get('/payments', ensureAuthenticated, (req, res) => {
+    Payment.find({'userid':req.user.userid}, function(err, paydata) {
+        // console.log(paydata);
+        // note that data is an array of objects, not a single object!
+        if(err)
+            return console.log(err);
+        res.render('payments', { 
+            userdata: req.user
+            , layout : 'userlayout'
+            , active: 'active'
+            , payments: paydata
+        })
+    });
+});
+router.post("/paymentconfirmation", ensureAuthenticated, (req, res) => {
+    
+    let errors = [];
+    const {        
+        userid,
+        amountpaid,
+        payref,
+        depositorname,
+        methodofpayment,
+        bankpaidto
+        } = req.body;
+        // console.log(req.body);
+        
+        if(errors.length > 0){
+            errors.push({msg: 'Please cross-check your submission'});
+        }else{
+            req.flash('success_msg', 'Your payment has been sent - Pending Confirmation');
+        }
+    
+    const newPayment = new Payment({              
+        userid,
+        amountpaid,
+        payref,
+        depositorname,
+        methodofpayment,
+        bankpaidto,    
+        paymentdate: moment().format('YYYY-MM-DD'),
+        payid:  'P-'+userid+rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'uppercase'}),
+        status: 'Unconfirmed'
+    });
+
+    newPayment.save().catch(err => console.log(err));     
+    res.redirect('back');
+        
+});
+
+router.get('/all_payments', requiresAdmin(), (req, res) => {
+    Payment.find({}, function(err, paydata) {
+        // console.log(paydata);
+        // note that data is an array of objects, not a single object!
+        if(err)
+            return console.log(err);
+        res.render('all_payments', { 
+            userdata: req.user
+            , layout : 'userlayout'
+            , active: 'active'
+            , payments: paydata
+        })
+    });
+});
+
+router.get('/payment/:userid/:payid', (req, res) => {
+
+        layout = 'userlayout';
+        userinfo = req.user;
+        
+        //From the net
+        Payment.findOne({'payid': req.params.payid}, function (err, paymentdata){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+            
+                Profile.findOne({'userid': req.params.userid}, function (err, userdata){
+                    if(err){
+                        console.log(err);
+                        return;
+                    }else{
+                        // console.log(userinfo);
+                        res.render('payment', {
+                            paymentdata: paymentdata,
+                            layout: layout,
+                            userdata: userinfo              
+                        });
+                    }
+                    
+                    
+                });
+
+        });
+    
+});
+
+router.get('/approve/:payid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    const status = 'Confirmed';
+    //From the net
+    Payment.findOneAndUpdate({'payid' : req.params.payid}, { $set: { status } }, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The payment has been confirmed!');
+        res.redirect('back');
+       
+});
+
+router.get('/delete/:payid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    const status = 'Confirmed';
+    //From the net
+    Payment.findOneAndRemove({'payid' : req.params.payid}, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The payment has been deleted!');
+        res.redirect('back');
+       
+});
+
+module.exports = router;

@@ -1,0 +1,29 @@
+ <% if (login) { %>    
+                    <div class="panel panel-default sidebar-menu wow fadeInRight animated">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Recommended</h3>
+                        </div>
+                        <div class="panel-body recent-property-widget">
+                                    <ul>
+
+                                    <% if(recommended.length > 0){%>
+                                        <% recommended.forEach(function(rproperty){ %>
+                                    <li>
+                                        <div class="col-md-3 col-sm-3 col-xs-3 blg-thumb p0">
+                                            <a href="/property/<%=rproperty.propertyid%>"><img src="users/<%=rproperty.userid%>/<%=rproperty.propertyid%>/<%=rproperty.featuredimg%>"></a>
+                                            <span class="property-seeker">
+                                                <b class="b-1">City: <%=rproperty.propertycity%></b>
+                                                <b class="b-2">P.O: <%=rproperty.propertyoffer%></b>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-8 col-sm-8 col-xs-8 blg-entry">
+                                            <h6> <a href="/property/<%=rproperty.propertyid%>"><%=rproperty.propertyname%></a></h6>
+                                            <span class="property-price"><%=rproperty.propertyprice%></span>
+                                        </div>
+                                    </li>
+                                    <% }) } %>                              
+
+                                </ul>
+                        </div>
+                    </div>
+                <% } %>
