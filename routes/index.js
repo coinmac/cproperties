@@ -52,26 +52,20 @@ router.get('/properties/:userid', (req, res) =>
 );
 
 router.post('/properties_search', (req, res) => {
-    
-        Property.find({
-            $and: [
-                {$or : [{'propertyname':/req.body.propertyname/}]},
-                {$or : [{'propertyoffer':/req.body.propertyoffer/}]},
-                {$or : [{'propertycity':/req.body.propertycity/}]}
-            ]},
-                function(err, data){    
-                    if(err){
-                        console.log(err);
-                        return;
-                    }    
-                console.log(data);
-                
-                    res.render('properties', {
-                        properties: data[0],
-                        amenities: data[1]
-                    });
-                }
-        );
+    const propertyname = req.body.propertyname;
+    const propertyoffer = req.body.propertyoffer;
+    const propertycity = req.body.propertycity;
+
+        Property.find({ $or: [ {propertyname: new RegExp(propertyname,'i')}, {propertyoffer: new RegExp(propertyoffer,'i')},{propertycity: new RegExp(propertycity,'i')} ] }, function(err, data){     
+                            if(err){
+                                console.log(err);
+                                return;
+                            }    
+                            res.render('properties_search', {
+                                properties: data
+                            });
+                });
+        
 });
 
 

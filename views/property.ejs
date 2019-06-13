@@ -118,7 +118,7 @@
                                 <div class="section">
                                     <h4 class="s-property-title">Description</h4>
                                     <div class="s-property-content">
-                                        <p><%=pr.propertydescription%></p>                                    
+                                        <p class="fr-view"><%-pr.propertydescription%></p>                                    
                                     </div>
                                 </div>
                                 
@@ -134,8 +134,8 @@
                                     <h4 class="s-property-title">Additional Details</h4>
                                     
                                     <ul class="additional-details-list clearfix">
-                                    <% amenities.forEach(function(am){ 
-                                        if(am.additional=="aa"){
+                                    <% amenities.forEach(function(aam){ 
+                                        if(aam.additional=="aa"){
                                         %>
                                         <li>
                                             <span class="col-xs-6 col-sm-4 col-md-4 add-d-title"><%=aam.amenityname%></span>
@@ -180,8 +180,8 @@
 
                                 <!-- .property-warning -->
 
-                                <div class="section">
-                                        <h4 class="s-property-title alert alert-warning">Agents Note/Warning</h4>
+                                <div class="section  alert alert-warning">
+                                        <h4 class="s-property-title">Agents Note/Warning</h4>
                                         <div class="s-property-content">
                                             <p><%=pr.agentswarning%></p>                                    
                                         </div>
@@ -200,7 +200,7 @@
                                             <div class="clear">
                                                 <div class="col-xs-4 col-sm-4 dealer-face">
                                                     <a href="#">
-                                                        <img src="/<%=ud.profileimg%>" class="img-circle">
+                                                        <img src="<%=ud.profileimg%>" class="img-circle">
                                                     </a>
                                                 </div>
                                                 <div class="col-xs-8 col-sm-8 ">

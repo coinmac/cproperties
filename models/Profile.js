@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const ProfileSchema = new mongoose.Schema({
     userid: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     fullname: {
         type: String,
