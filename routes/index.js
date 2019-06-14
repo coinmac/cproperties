@@ -22,7 +22,7 @@ router.get('/', (req, res) =>
             return console.log(err);
         // note that data is an array of objects, not a single object!
         res.render('welcome', {
-             properties: data
+             topproperties: data
         });
     })
 );
