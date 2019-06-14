@@ -16,8 +16,8 @@ const recaptcha = new Recaptcha('6LdAvKgUAAAAAFBENg7sCDKiHfuAquipsGpzCr5L', '6Ld
 
 // Prepare mail
 const transporter = nodemailer.createTransport({
-    name: COINMAC-Properties.com,
-    host: smtp.gmail.com,
+    name: 'COINMAC-Properties.com',
+    host: 'smtp.gmail.com',
     service: 'gmail',
     auth: {
       user: 'coinmacsms@gmail.com',
