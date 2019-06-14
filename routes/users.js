@@ -10,9 +10,9 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
 
-const Recaptcha = require('express-recaptcha').RecaptchaV3;
+const Recaptcha = require('express-recaptcha').RecaptchaV2;
 
-const recaptcha = new Recaptcha('6LdAvKgUAAAAAFBENg7sCDKiHfuAquipsGpzCr5L', '6LdAvKgUAAAAAGaqZwinwn5PgjUrnWJ5bQop1RmF',{callback:'cb'});
+const recaptcha = new Recaptcha('6Le87qgUAAAAAA91eO824EPaYg9H1mQxhuaGmTQp', '6Le87qgUAAAAAGg0RHQRTYKtY3IR8V5ivMlh0QBv',{callback:'cb'});
 
 // Prepare mail
 const transporter = nodemailer.createTransport({
