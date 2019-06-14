@@ -8,6 +8,23 @@ const app = express();
 
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
+
+const Recaptcha = require('express-recaptcha').RecaptchaV3;
+
+const recaptcha = new Recaptcha('6LdAvKgUAAAAAFBENg7sCDKiHfuAquipsGpzCr5L', '6LdAvKgUAAAAAGaqZwinwn5PgjUrnWJ5bQop1RmF');
+
+// Prepare mail
+const transporter = nodemailer.createTransport({
+    name: COINMAC-Properties.com,
+    host: smtp.gmail.com,
+    service: 'gmail',
+    auth: {
+      user: 'coinmacsms@gmail.com',
+      pass: '@@coinsms22'
+    }
+  });
+
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 const { ensureAuthenticated } = require('../config/auth');
@@ -453,6 +470,37 @@ router.post('/register', (req, res) => {
                             fs.mkdirSync(dir);
                         }
 
+                        const mailOptions = {
+                            from: 'admin@coinmac-properties.com',
+                            to: email,
+                            subject: 'Welcome to COINMAC Properties',
+                            text: '<!DOCTYPE html>'+
+                                '<html lang="en">'+
+                                '<head>'+
+                                
+                                    '<title>COINMAC Properties - Welcome</title>'+
+                                '</head>'+
+                                '<body>'+
+                                    '<h1>COINMAC Properties</h1>'+
+                                    '<h6>Your no 1 Choice for Real Estate Listing</h6>'+
+                                    '<hr>'+
+                                    '<p> Welcome '+name+', <br>'+
+                                    'We welcome you to the best real estate listing and general properties services platform.</p>'+
+                                    '<p>Click <a href="coinmac-properties.com/activate/'+userid+'" class="btn btn-inline btn-success">Activate</a> or copy enter your activation code <b>'+userid+'<b> manually to start using the platform.</p>'+
+                                    '<p>Enjoy real estate and property services!</p>'+
+                                    '<p>Tony<br>From COINMAC Properties</p>'+
+                                '</body>'+
+                                '</html>'
+                          };
+
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if (error) {
+                            console.log(error);
+                            } else {
+                            console.log('Email sent: ' + info.response);
+                            }
+                        });
+
                         req.flash('success_msg', 'Thank you for signing up with us. We have sent an activation link to the e-mail that you provided! Click on the link to activate your account and start submitting properties. Welcome!');
                         res.redirect('/users/login');
                     })
@@ -466,14 +514,22 @@ router.post('/register', (req, res) => {
 
 });
 //Login Page
-router.get('/login', (req, res) => res.render('login'));
+router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha }));
 // Login Handle
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next);
+router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
+    if (!req.recaptcha.error) {        
+      
+        passport.authenticate('local', {
+            successRedirect: '/dashboard',
+            failureRedirect: '/users/login',
+            failureFlash: true
+        })(req, res, next);
+
+    } else {
+        let errors = [];
+        errors.push({msg: 'You failed the recaptcha verification!'});
+        res.redirect('back');
+    }
 });
 // Dashboard
 router.get('/uploadimage', (req, res) => 
