@@ -12,7 +12,7 @@ const nodemailer = require('nodemailer');
 
 const Recaptcha = require('express-recaptcha').RecaptchaV3;
 
-const recaptcha = new Recaptcha('6LdAvKgUAAAAAFBENg7sCDKiHfuAquipsGpzCr5L', '6LdAvKgUAAAAAGaqZwinwn5PgjUrnWJ5bQop1RmF');
+const recaptcha = new Recaptcha('6LdAvKgUAAAAAFBENg7sCDKiHfuAquipsGpzCr5L', '6LdAvKgUAAAAAGaqZwinwn5PgjUrnWJ5bQop1RmF',{callback:'cb'});
 
 // Prepare mail
 const transporter = nodemailer.createTransport({
@@ -141,17 +141,23 @@ var requiresAdmin = function() {
   };
 
 // Dashboard
-router.get('/submit', ensureAuthenticated, (req, res) =>
+router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, (req, res) =>
     res.render('submit', { 
         userdata: req.user
         , propertyid: rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'uppercase'})
         , layout : 'userlayout'
-        , active: 'active'
+        , active: 'active',
+        captcha: res.recaptcha
     })
 );
 
 router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
-    
+    if (req.recaptcha.error) { 
+        let errors = [];
+        errors.push({msg: 'Error in Recaptcha verification'});
+        res.redirect('back');
+    }else{
+
     const {
         userid,
         propertyid,
@@ -264,6 +270,7 @@ router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, 
 
         newAmenity.save();
     }};
+    }
 
 });
 
@@ -382,12 +389,15 @@ router.post('/uploadprofilepic',  ensureAuthenticated, (req, res) => {
 });
 
 //Register Page 
-router.get('/register', (req, res) => res.render('register'));
 
-router.post('/register', (req, res) => {
-    console.log(req.body);
-    // res.send('hello');
-    
+router.get('/register', recaptcha.middleware.render, (req, res) => res.render('register', { captcha:res.recaptcha }));
+
+router.post('/register', recaptcha.middleware.verify, (req, res) => {
+    if (req.recaptcha.error) { 
+        let errors = [];
+        errors.push({msg: 'Error in Recaptcha verification'});
+        res.redirect('back');
+    }else{
     const { name, lastname, email, password, password2 } = req.body;
     let errors = [];
     
@@ -510,8 +520,7 @@ router.post('/register', (req, res) => {
         });
     } 
 
-    console.log(req.body);
-
+    }
 });
 //Login Page
 router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha }));
