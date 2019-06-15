@@ -538,7 +538,7 @@ router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
     
     } else {
         let errors = [];
-        errors.push({msg: 'You failed the recaptcha verification!'});
+        errors.push({msg: 'You failed the recaptcha verification test!'});
         res.redirect('back');
     }
     
