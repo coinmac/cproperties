@@ -152,7 +152,7 @@ router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, (req, re
 );
 
 router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
-    if (!req.recaptcha.error) { 
+    if (req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
@@ -393,7 +393,7 @@ router.post('/uploadprofilepic',  ensureAuthenticated, (req, res) => {
 router.get('/register', recaptcha.middleware.render, (req, res) => res.render('register', { captcha:res.recaptcha }));
 
 router.post('/register', recaptcha.middleware.verify, (req, res) => {
-    if (!req.recaptcha.error) { 
+    if (req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
