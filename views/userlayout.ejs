@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="/assets/css/wizard.css">
     <link rel="stylesheet" href="/assets/css/responsive.css">
     <link rel="stylesheet" href="/froala-editor/css/froala_editor.pkgd.min.css"/>
+    <link rel="stylesheet" href="/assets/css/datatables.css">
     
        
 </head>
@@ -103,6 +104,7 @@
                     <a class="navbar-btn nav-button wow fadeInRight" href="/users/submit" data-wow-delay="0.48s">Submit Property</a>
                 </div>
                 <ul class="main-nav nav navbar-nav navbar-right">
+                        <%if(userdata.isAdmin===false){%>
                     <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                         <a href="/profile" class="" >My Profile</a>
                        
@@ -114,6 +116,7 @@
                     <li class="dropdown ymm-sw " data-wow-delay="0.1s">
                         <a href="/users/payments" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Payments <b class="caret"></b></a>
                         <ul class="dropdown-menu navbar-nav">
+                        
                             <li>
                                 <a href="/users/payments#addnew">Add New Payment</a>
                             </li>
@@ -126,11 +129,26 @@
                             <li>
                                 <a href="/users/payments#history">Payment History</a>
                             </li>
-
+                        
                         </ul>
                     </li>
                     
                     <li class="wow fadeInDown" data-wow-delay="0.5s"><a class="" href="/users/favourites">Favourites</a></li>
+
+                    <%}else if(userdata.isAdmin===true){%>
+                        <li>
+                            <a href="dashboard">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="all_properties">Properties</a>
+                        </li>
+                        <li>
+                            <a href="all_payments">Payments</a>
+                        </li>
+                        <li>
+                            <a href="all_users">Users</a>
+                        </li>
+                    <%}%>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -302,6 +320,8 @@
     <script type="text/javascript" src="/assets/js/lightslider.min.js"></script>
     
     <script type="text/javascript" src="/froala-editor/js/froala_editor.pkgd.min.js"></script>
+    <script src="/assets/js/datatables.js"></script>
+    <script src="/assets/js/datatablesb4.js"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>
                             $(document).ready(function () {

@@ -3115,3 +3115,7 @@ datalist option{
   padding: 20px;
   margin: 0px;
 }
+.client-face{
+    height: 100px;
+    width: 100px;
+}

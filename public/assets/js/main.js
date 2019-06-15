@@ -5,6 +5,7 @@ $(window).load(function () { // makes sure the whole site is loaded
 })
 $(document).ready(function () {
 
+    $('#datatable').DataTable();
     
     $('input').iCheck({
         checkboxClass: 'icheckbox_square-yellow',

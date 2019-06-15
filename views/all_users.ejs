@@ -1,0 +1,84 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">All Users </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container row" style="width: 100% !important">
+
+            
+
+            <div class="col-md-12">
+                <div class="box-for overflow">
+                        <% include ./partials/messages %>
+                    <%if(allusers.length > 0){%>
+                    <div class="table-responsive table">
+                        <table class="table table-hover"  id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Full Name</th>
+                                    <th>UserID</th>
+                                    <th>E-mail</th>
+                                    <th>Account Plan</th>
+                                    <th>Status</th>
+                                    <th>Credits</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% allusers.forEach(function(user){%>
+
+                                
+                                <tr>
+                                    <td><img src="<%=user.profileimg%>" alt="<%=user.userid%>" class="img-circle" height="50" width="50"></td>
+                                    <td><%=user.fullname%></td>
+                                    <td><%=user.userid%> <%if(user.accounttype=="User"){%><span class="badge badge-primary"><%=user.accounttype%></span><%}else{%><span class="badge badge-danger" style="background-color: red"><%=user.accounttype%></span><%}%></td>
+                                    <td><%=user.pemail%></td>
+                                    <td><%=user.accountplan%></td>
+                                    <td><%= user.accountstatus %></td>
+                                    <td><%=user.credit%></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            
+                                            <a href="deleteuser/<%=user.userid%>" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="/aprofile/<%=user.userid%>" target="_blank" class="btn btn-info btn-sm">View</a>
+                                            <%if(user.accountstatus!='Activated'){%>
+                                                <a href="approveuser/<%=user.userid%>" class="btn btn-success btn-sm">Activate</a>
+                                            <%}%>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <%})%>
+                            </tbody>
+                            <tfoot> 
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Full Name</th>
+                                    <th>UserID</th>
+                                    <th>E-mail</th>
+                                    <th>Account Plan</th>
+                                    <th>Status</th>
+                                    <th>Credits</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 

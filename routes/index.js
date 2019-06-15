@@ -13,19 +13,22 @@ const { ensureAuthenticated } = require('../config/auth');
 
 //Welcome
 // router.get('/', (req, res) => res.render('welcome'));
-router.get('/', (req, res) => 
-
-    // mongoose operations are asynchronous, so you need to wait 
-    Property.find({}, function(err, data) {
-        
+router.get('/', (req, res) => {
+    
+    const slideproperties = Property.find({'viewcategory':'Slides'}, function(error, slides){
+        if(error)
+            return console.log(error);
+        return slides
+    });
+    Property.find({'viewcategory':'Featured'}, function(err, data) {
         if (err)
-            return console.log(err);
-        // note that data is an array of objects, not a single object!
+            return console.log(err);        
         res.render('welcome', {
-             topproperties: data
+             topproperties: data,
+             slideproperties: slideproperties
         });
     })
-);
+});
 
 router.get('/properties', (req, res) => 
 
@@ -159,6 +162,26 @@ router.get('/profile', ensureAuthenticated, (req, res) =>
                 userdata: req.user,
                 userprofile: data,
                 layout : 'userlayout',
+                active: 'active'
+            });
+        }
+    })
+);
+
+// Dashboard
+router.get('/aprofile/:userid', ensureAuthenticated, (req, res) => 
+    
+    
+    Profile.findOne({'userid':req.params.userid}, function(err, data) { 
+        if (err){
+            
+            throw err;
+        } else if (data) {
+            
+            res.render('aprofile', {
+                auserdata: data,
+                userprofile: data,
+                layout : 'layout',
                 active: 'active'
             });
         }

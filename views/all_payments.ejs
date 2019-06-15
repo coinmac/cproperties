@@ -2,7 +2,7 @@
         <div class="container">
             <div class="row">
                 <div class="page-head-content">
-                    <h1 class="page-title"> <%=userdata.name%> | All Payments </h1>               
+                    <h1 class="page-title">All Payments </h1>               
                 </div>
             </div>
         </div>
@@ -12,17 +12,16 @@
 
     <!-- register-area -->
     <div class="register-area" style="background-color: rgb(249, 249, 249);">
-        <div class="container">
+        <div class="container row" style="width: 100% !important">
 
             
 
             <div class="col-md-12">
                 <div class="box-for overflow">
                         <% include ./partials/messages %>
-                    <h2>All Payment History</h2><hr>
                     <%if(payments.length > 0){%>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+                    <div class="table-responsive table">
+                        <table class="table table-hover"  id="datatable">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -42,7 +41,7 @@
                                     <td><%=pay.amountpaid%></td>
                                     <td><%=pay.status%></td>
                                     <td>
-                                        <div class="button-group">
+                                        <div class="btn-group">
                                             
                                             <a href="delete/<%=pay.payid%>" class="btn btn-danger btn-sm">Delete</a>
                                             <a href="payment/<%=pay.userid%>/<%=pay.payid%>" class="btn btn-info btn-sm">View</a>

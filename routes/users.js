@@ -152,7 +152,7 @@ router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, (req, re
 );
 
 router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
-    if (req.recaptcha.error) { 
+    if (!req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
@@ -346,7 +346,7 @@ router.post('/uploadprofilepic', ppupload.single('profileimg'), (req, res, next)
       error.httpStatusCode = 400
       return next(error)
     }
-    const profileimg = 'users/'+req.body.userid+'/'+file.filename;
+    const profileimg = '/users/'+req.body.userid+'/'+file.filename;
     console.log(profileimg); 
 
         Profile.findOneAndUpdate({'userid' : req.body.userid}, { $set: { profileimg } }, { upsert: true }, function(err, data) {
@@ -393,7 +393,7 @@ router.post('/uploadprofilepic',  ensureAuthenticated, (req, res) => {
 router.get('/register', recaptcha.middleware.render, (req, res) => res.render('register', { captcha:res.recaptcha }));
 
 router.post('/register', recaptcha.middleware.verify, (req, res) => {
-    if (req.recaptcha.error) { 
+    if (!req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
@@ -526,6 +526,7 @@ router.post('/register', recaptcha.middleware.verify, (req, res) => {
 router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha }));
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
+//router.post('/login', (req, res, next) => {
     if (!req.recaptcha.error) {        
       
         passport.authenticate('local', {
@@ -534,11 +535,13 @@ router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
             failureFlash: true
         })(req, res, next);
 
+    
     } else {
         let errors = [];
         errors.push({msg: 'You failed the recaptcha verification!'});
         res.redirect('back');
     }
+    
 });
 // Dashboard
 router.get('/uploadimage', (req, res) => 
@@ -620,6 +623,8 @@ router.post("/paymentconfirmation", ensureAuthenticated, (req, res) => {
         
 });
 
+
+// ADMIN ONLY
 router.get('/all_payments', requiresAdmin(), (req, res) => {
     Payment.find({}, function(err, paydata) {
         // console.log(paydata);
@@ -634,6 +639,34 @@ router.get('/all_payments', requiresAdmin(), (req, res) => {
         })
     });
 });
+
+router.get('/all_properties', requiresAdmin(), (req, res) => {
+    Property.find({}, function(err, properties) {
+        if(err)
+            return console.log(err);
+        res.render('all_properties', { 
+            userdata: req.user
+            , layout : 'userlayout'
+            , active: 'active'
+            , allproperties: properties
+        })
+    });
+});
+
+router.get('/all_users', requiresAdmin(), (req, res) => {
+    Profile.find({}, function(err, usersdata) {
+        if(err)
+            return console.log(err);
+        res.render('all_users', { 
+            userdata: req.user
+            , layout : 'userlayout'
+            , active: 'active'
+            , allusers: usersdata
+        })
+    });
+});
+
+// END OF ADMIN ONLY
 
 router.get('/payment/:userid/:payid', (req, res) => {
 
@@ -701,6 +734,81 @@ router.get('/delete/:payid', (req, res) => {
         });
 
         req.flash('success_msg', 'The payment has been deleted!');
+        res.redirect('back');
+       
+});
+
+router.get('/approvep/:propertyid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    const propertystatus = 'Approved';
+    //From the net
+    Property.findOneAndUpdate({'propertyid' : req.params.propertyid}, { $set: { propertystatus } }, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The property has been approved!');
+        res.redirect('back');
+       
+});
+
+router.get('/deletep/:propertyid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    //From the net
+    Property.findOneAndRemove({'propertyid' : req.params.propertyid}, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The property has been deleted!');
+        res.redirect('back');
+       
+});
+
+router.get('/approveuser/:userid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    const accountstatus = 'Activated';
+    //From the net
+    Profile.findOneAndUpdate({'userid' : req.params.userid}, { $set: { accountstatus } }, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The user has been activated!');
+        res.redirect('back');
+       
+});
+
+router.get('/delete/:userid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    const status = 'Confirmed';
+    //From the net
+    Profile.findOneAndRemove({'userid' : req.params.userid}, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'The user has been deleted!');
         res.redirect('back');
        
 });
