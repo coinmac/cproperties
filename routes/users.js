@@ -527,7 +527,7 @@ router.get('/login', recaptcha.middleware.render, (req, res) => res.render('logi
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
-    if (!req.recaptcha.error) {        
+    if (req.recaptcha.error) {        
       
         passport.authenticate('local', {
             successRedirect: '/dashboard',
