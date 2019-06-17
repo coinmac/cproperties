@@ -16,113 +16,41 @@
              
         <div class="col-md-3 p0 padding-top-40 grow">
             <div class="blog-asside-right pr0">
-                <div class="panel panel-default sidebar-menu wow fadeInRight animated" >
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Search Properties</h3>
-                    </div>
-                    <form action="/properties_search">
-                        <div class="panel-body search-widget">
-                            <form action="" class=" form-inline"> 
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <input name="property_keyword" type="text" class="form-control" placeholder="Key word">
-                                        </div>
+                    <div class="panel panel-default sidebar-menu wow fadeInRight animated" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Search Properties</h3>
+                            </div>
+                            <form action="/properties_search" class="form-inline" method="POST">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <input type="text" class="form-control" placeholder="Key word" name="propertyname">
                                     </div>
-                                </fieldset>
-
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-
-                                            <select class="selectpicker cities" id="lunchBegins" data-live-search="true" data-live-search-style="begins" name="propertycity" title="Select your city">
-                                                        
-                                            </select>
-
-                                        </div>
-                                        <div class="col-xs-6">
-
-                                            <select id="propertyoffer" id="basic" class="selectpicker show-tick form-control" name="propertyoffer">
-                                                <option value="For Sale" selected>For Sale</option>
-                                                <option value="For Rent">For Rent </option>
-                                                <option value="For Lease">For Lease</option>
-                                                <option value="Others">Others</option>    
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset class="padding-5">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label for="minprice">Min Price (&#8358;)</label>
-                                                    <input id="minprice" type="number" min="5000" max="100000000" value="50000" oninput="adjustsliderRange()" class="form-control">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                        <label for="maxprice">Max Price (&#8358;)</label>
-                                                        <input id="maxprice" type="number" min="5000" max="100000000"  value="100000000" oninput="adjustsliderRange()" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                            <label for="propertysize">Property Size (Sqrfts) :</label>
-                                            <input type="text" class="span2" value="" data-slider-min="1000" 
-                                                data-slider-max="1000000" data-slider-step="10000" 
-                                                data-slider-value="[1000,1000000]" id="property-geo" ><br />
-                                            <b class="pull-left color">1000sqrfts</b> 
-                                            <b class="pull-right color">1000,000sqrfts</b>                                                
-                                        </div>                                            
-                                    </div>
-                                </fieldset>                                
-
-                                <fieldset class="padding-5">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <label for="price-range">Min baths :</label>
-                                            <input propertybaths type="text" class="span2" value="" data-slider-min="0" 
-                                                data-slider-max="50" data-slider-step="1" 
-                                                data-slider-value="[0,50]" id="min-baths" ><br />
-                                            <b class="pull-left color">0</b> 
-                                            <b class="pull-right color">50</b>                                                
-                                        </div>
-
-                                        <div class="col-xs-6">
-                                            <label for="property-geo">Min bedrooms :</label>
-                                            <input name="propertybeds" type="text" class="span2" value="" data-slider-min="0" 
-                                                data-slider-max="500" data-slider-step="1" 
-                                                data-slider-value="[0,500]" id="min-bed" ><br />
-                                            <b class="pull-left color">1</b> 
-                                            <b class="pull-right color">500</b>
-
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <% if(amenities.length > 0){ %>                                
-                                       
-                                        <% amenities.forEach(function(pamenity){%>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <input name="propertycity" class="form-control" list="cities" placeholder="Select Location" data-live-search="true" data-live-search-style="begins">                                   
+                                        <datalist id="cities" class="selectpicker cities"  data-live-search="true" data-live-search-style="begins">
                                             
-                                                <fieldset class="padding-2">
-                                                    <div class="row">
-                                            
-                                                        <div class="col-xs-12">
-                                                            <div class="checkbox">
-                                                                <label> <input type="checkbox" name="<%=pamenity.amenityname%>" checked> <%=pamenity.amenityname%></label>
-                                                            </div> 
-                                                        </div>
-                                            
-                                                    </div>
-                                                </fieldset>                                          
-
-                                        <% }) } %>
-                                                                
+                                        </datalist>
+                                    </div>
+                                
+                                    <div class="form-group col-xs-4">                                     
+                                        <select id="basic" class="selectpicker show-tick form-control" name="propertyoffer">
+                                            <option> -Type- </option>
+                                            <option value="For Rent">For Rent</option>
+                                            <option value="For Sale">For Sale</option>
+                                            <option value="Land">Land</option>
+                                            <option value="Short-Let">Short-Let</option>
+                                            <option value="For Lease">For Lease</option>
+                
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-2">
+                                        <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+                                    </div>  
+                                </div>
                             </form>
-                        </div>
-                    </form>
-                </div>
+                    </div>
                
             </div>
         </div>

@@ -503,7 +503,7 @@ router.post('/register', recaptcha.middleware.verify, (req, res) => {
                                     '<hr>'+
                                     '<p> Welcome '+name+', <br>'+
                                     'We welcome you to the best real estate listing and general properties services platform.</p>'+
-                                    '<p>Click <a href="coinmac-properties.com/users/activate/'+userid+'" class="btn btn-inline btn-success">Activate</a> to start using the platform.</p>'+
+                                    '<p>Click <a href="coinmac-properties.com/users/activate/'+userid+'" style="display: inline-block; padding-left: 5px; padding-right: 5px; background-color: darkblue; color: white; text-align: center;">Activate</a> to start using the platform.</p>'+
                                     '<p>Enjoy real estate and property services!</p>'+
                                     '<p>Admin<br>@COINMAC Properties</p>'+
                                 '</body>'+
