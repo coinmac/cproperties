@@ -4,13 +4,14 @@ const multer = require('multer');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const moment = require('moment');
+
 const app = express();
 
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
-const csurf = require('csurf');
-const cookieParser = require('cookie-parser');
+
+
 
 const Recaptcha = require('express-recaptcha').RecaptchaV2;
 
@@ -146,26 +147,18 @@ var requiresAdmin = function() {
     ]
   };
 
-const csrfMiddleware = csurf({
-cookie: true
-});
-
-app.use(cookieParser());
-app.use(csrfMiddleware);
-
 // Dashboard
-router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, csrfMiddleware, (req, res) =>
+router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, (req, res) =>
     res.render('submit', { 
         userdata: req.user
         , propertyid: rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'uppercase'})
         , layout : 'userlayout'
         , active: 'active',
-        captcha: res.recaptcha,
-        csrfToken: req.csrfToken()
+        captcha: res.recaptcha
     })
 );
 
-router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, csrfMiddleware, (req, res) => {
+router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
     if (req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
@@ -556,9 +549,9 @@ router.get('/activate/:userid', (req, res) => {
         res.redirect('/users/login');
 });
 //Login Page
-router.get('/login', recaptcha.middleware.render, csrfMiddleware, (req, res) => res.render('login', { captcha:res.recaptcha, csrfToken: req.csrfToken() }));
+router.get('/login', recaptcha.middleware.render,  (req, res) => res.render('login', { captcha:res.recaptcha, csrfToken: req.csrfToken() }));
 // Login Handle
-router.post('/login', recaptcha.middleware.verify, csrfMiddleware, (req, res, next) => {
+router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
 
     if (req.recaptcha.error) {        
@@ -667,7 +660,6 @@ router.post("/paymentconfirmation", ensureAuthenticated, (req, res) => {
         
 });
 
-
 // ADMIN ONLY
 router.get('/all_payments', requiresAdmin(), (req, res) => {
     Payment.find({}, function(err, paydata) {
@@ -711,7 +703,6 @@ router.get('/all_users', requiresAdmin(), (req, res) => {
 });
 
 // END OF ADMIN ONLY
-
 router.get('/payment/:userid/:payid', (req, res) => {
 
         layout = 'userlayout';
