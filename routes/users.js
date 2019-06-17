@@ -549,7 +549,7 @@ router.get('/activate/:userid', (req, res) => {
         res.redirect('/users/login');
 });
 //Login Page
-router.get('/login', recaptcha.middleware.render,  (req, res) => res.render('login', { captcha:res.recaptcha, csrfToken: req.csrfToken() }));
+router.get('/login', recaptcha.middleware.render,  (req, res) => res.render('login', { captcha:res.recaptcha }));
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
