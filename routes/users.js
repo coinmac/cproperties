@@ -19,9 +19,13 @@ const transporter = nodemailer.createTransport({
     name: 'COINMAC-Properties.com',
     host: 'smtp.gmail.com',
     service: 'gmail',
+    secure: false,
     auth: {
       user: 'coinmacsms@gmail.com',
       pass: '@@coinsms22'
+    },
+    tls: {
+        rejectUnauthorized: false
     }
   });
 
@@ -393,11 +397,14 @@ router.post('/uploadprofilepic',  ensureAuthenticated, (req, res) => {
 router.get('/register', recaptcha.middleware.render, (req, res) => res.render('register', { captcha:res.recaptcha }));
 
 router.post('/register', recaptcha.middleware.verify, (req, res) => {
+// router.post('/register', (req, res) => {
+    
     if (req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
-    }else{
+    }else{ 
+    
     const { name, lastname, email, password, password2 } = req.body;
     let errors = [];
     
@@ -481,24 +488,24 @@ router.post('/register', recaptcha.middleware.verify, (req, res) => {
                         }
 
                         const mailOptions = {
-                            from: 'admin@coinmac-properties.com',
+                            from: 'COINMAC Properties <admin@coinmac-properties.com>',
                             to: email,
                             subject: 'Welcome to COINMAC Properties',
-                            text: '<!DOCTYPE html>'+
+                            html: '<!DOCTYPE html>'+
                                 '<html lang="en">'+
                                 '<head>'+
                                 
                                     '<title>COINMAC Properties - Welcome</title>'+
                                 '</head>'+
                                 '<body>'+
-                                    '<h1>COINMAC Properties</h1>'+
-                                    '<h6>Your no 1 Choice for Real Estate Listing</h6>'+
+                                    '<h2><img src="http://coinmac-properties.com/assets/img/logo.png" height="60" width="auto" alt="COINMAC PROPERTIES"></h2>'+
+                                    '<h5>Your no 1 Choice for Real Estate Listing</h5>'+
                                     '<hr>'+
                                     '<p> Welcome '+name+', <br>'+
                                     'We welcome you to the best real estate listing and general properties services platform.</p>'+
-                                    '<p>Click <a href="coinmac-properties.com/activate/'+userid+'" class="btn btn-inline btn-success">Activate</a> or copy enter your activation code <b>'+userid+'<b> manually to start using the platform.</p>'+
+                                    '<p>Click <a href="coinmac-properties.com/users/activate/'+userid+'" class="btn btn-inline btn-success">Activate</a> to start using the platform.</p>'+
                                     '<p>Enjoy real estate and property services!</p>'+
-                                    '<p>Tony<br>From COINMAC Properties</p>'+
+                                    '<p>Admin<br>@COINMAC Properties</p>'+
                                 '</body>'+
                                 '</html>'
                           };
@@ -522,13 +529,40 @@ router.post('/register', recaptcha.middleware.verify, (req, res) => {
 
     }
 });
+// Activate Account
+router.get('/activate/:userid', (req, res) => {
+    layout = 'userlayout';
+    const accountstatus = 'Activated';
+    //From the net
+    Profile.findOneAndUpdate({'userid' : req.params.userid}, { $set: { accountstatus } }, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'You account has been activated. Please login to update your profile and start posting properties!');
+        res.redirect('/users/login');
+});
 //Login Page
 router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha }));
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
+
     if (req.recaptcha.error) {        
       
+        Profile.find( { $and:[ {'_id':objId}, {'pemail':req.body.email}, {'accountstatus':'Activated'} ]}, 
+        function(err,activated){
+            if(err) 
+            {
+                let errors = [];
+                errors.push({msg: 'Please check your email to activate your account and login again'});
+                res.redirect('/users/login');
+            }
+        });
+
         passport.authenticate('local', {
             successRedirect: '/dashboard',
             failureRedirect: '/users/login',
