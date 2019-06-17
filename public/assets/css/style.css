@@ -3119,3 +3119,8 @@ datalist option{
     height: 100px;
     width: 100px;
 }
+
+.slider-area{
+    background-image: url('/assets/img/property-1/property3.jpg') !important;
+    background-size: cover;
+}

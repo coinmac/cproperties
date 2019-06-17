@@ -4,9 +4,6 @@ $(window).load(function () { // makes sure the whole site is loaded
     $('body').delay(350).css({'overflow': 'visible'});
 })
 $(document).ready(function () {
-
-    $('#datatable').DataTable();
-    
     $('input').iCheck({
         checkboxClass: 'icheckbox_square-yellow',
         radioClass: 'iradio_square-yellow',
@@ -292,7 +289,6 @@ function payWithPaystack(){
   }
 
 new WOW().init();
-
 
 
 

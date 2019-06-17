@@ -1,6 +1,7 @@
 <div class="slider-area" style="overflow: hidden">
 <div class="slider">
     <div id="bg-slider" class="owl-carousel owl-theme">
+
         <!-- DYNAMIC DISPLAY FEATURED PROPERTIES -->
         <%if(slideproperties.length > 0){ slideproperties.forEach(function(slide){%>
             <a href="/property/<%=slide.userid%>/<%=slide.propertyid%>"><%=slide.propertyname%>, <%=slide.propertylocation%> - <%=slide.propertyamount%> | <button class="btn btn-inline primary float-right">View Property</button> </a>
@@ -9,9 +10,7 @@
                 <img src="users/<%=slide.userid%>/<%=slide.propertyid%>/<%=slide.featuredimg%>">
                 </div>
             
-        <%})}else{%>
-            <img src="/assets/img/property-1/property1.jpg" width="100%" height="auto">
-        <%}%>
+        <%})}%>
 
     </div>
 </div>
@@ -20,7 +19,7 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12">
             
                 <h2 style="text-shadow: #FCFCFC 0px 1px; color: darkblue;">Search Properties</h2>
-                <p style="text-shadow: #FCFCFC 0px 1px; font-weight: bold; font-size: 1.5em">Search our real estate property directory</p>
+                <p style="text-shadow: #000 0px 1px; font-weight: bold; font-size: 1.5em; color: white;">Search our real estate property directory</p>
             
             <div class="search-form wow pulse" data-wow-delay="0.8s">                
 
@@ -55,7 +54,7 @@
 </div>
 
 <!-- property area -->
-<div class="content-area home-area-1 recent-property" style="background-color:ghostwhite; z-index: 999999; padding-bottom: 55px;">
+<div class="content-area home-area-1 recent-property" style="background-color:ghostwhite; z-index: 000; padding-bottom: 55px;">
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-sm-12 text-center page-title">
