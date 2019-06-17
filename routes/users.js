@@ -553,7 +553,7 @@ router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 
     if (req.recaptcha.error) {        
       
-        Profile.find( { $and:[ {'_id':objId}, {'pemail':req.body.email}, {'accountstatus':'Activated'} ]}, 
+        Profile.find( { $and:[ {'pemail':req.body.email}, {'accountstatus':'Activated'} ]}, 
         function(err,activated){
             if(err) 
             {
