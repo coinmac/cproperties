@@ -69,7 +69,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 const router = express.Router();
-app.use(app.router);
 
 const storage = multer.diskStorage({
     //destination: './public/users/',
