@@ -4,8 +4,13 @@ const multer = require('multer');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const moment = require('moment');
+const csrf = require('csurf');
+const cookieParser = require('cookie-parser');
 
 const app = express();
+
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -24,8 +29,8 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     secure: false,
     auth: {
-      user: 'coinmacsms@gmail.com',
-      pass: '@@coinsms22'
+      user: 'gcictng@gmail.com',
+      pass: 'nuopqzxruosubucp'
     },
     tls: {
         rejectUnauthorized: false
@@ -549,7 +554,7 @@ router.get('/activate/:userid', (req, res) => {
         res.redirect('/users/login');
 });
 //Login Page
-router.get('/login', recaptcha.middleware.render,  (req, res) => res.render('login', { captcha:res.recaptcha }));
+router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha, csrfToken: req.csrfToken() }));
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
