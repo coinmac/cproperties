@@ -176,7 +176,7 @@ router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, 
         errors.push({msg: 'Error in Recaptcha verification'});
         res.redirect('back');
     }else{
-
+        const file = req.files;
     const {
         userid,
         propertyid,
