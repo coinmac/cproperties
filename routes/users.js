@@ -10,7 +10,14 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 app.use(cookieParser());
-app.use(csrf({ cookie: true }));
+
+app.use(csrf());
+app.use(function (req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.locals.csrftoken = req.csrfToken();
+  next();
+});
+
 
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -62,6 +69,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 const router = express.Router();
+app.use(app.router);
 
 const storage = multer.diskStorage({
     //destination: './public/users/',
