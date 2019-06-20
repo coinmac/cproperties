@@ -8,7 +8,7 @@ const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 
 const app = express();
-
+/*
 app.use(cookieParser());
 
 app.use(csrf());
@@ -17,7 +17,7 @@ app.use(function (req, res, next) {
   res.locals.csrftoken = req.csrfToken();
   next();
 });
-
+*/
 
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -561,7 +561,7 @@ router.get('/activate/:userid', (req, res) => {
         res.redirect('/users/login');
 });
 //Login Page
-router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha, csrfToken: req.csrfToken() }));
+router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha}));
 // Login Handle
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
