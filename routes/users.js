@@ -566,7 +566,7 @@ router.get('/login', recaptcha.middleware.render, (req, res) => res.render('logi
 router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
 //router.post('/login', (req, res, next) => {
 
-    if (req.recaptcha.error) {        
+    if (!req.recaptcha.error) {        
       
         Profile.find( { $and:[ {'pemail':req.body.email}, {'accountstatus':'Activated'} ]}, 
         function(err,activated){
