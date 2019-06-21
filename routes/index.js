@@ -14,19 +14,20 @@ const { ensureAuthenticated } = require('../config/auth');
 // router.get('/', (req, res) => res.render('welcome'));
 router.get('/', (req, res) => {
     
-    const slideproperties = Property.find({'viewcategory':'Slides'}, function(error, slides){
+    Property.find({'viewcategory':'Slides'}, function(error, slides){
         if(error)
             return console.log(error);
-        return slides
-    });
-    Property.find({'viewcategory':'Featured'}, function(err, data) {
-        if (err)
-            return console.log(err);        
-        res.render('welcome', {
-             topproperties: data,
-             slideproperties: slideproperties
+
+        // GET SLIDE PROPERTIES
+        Property.find({'viewcategory':'Featured'}, function(err, data) {
+            if (err)
+                return console.log(err);        
+            res.render('welcome', {
+                 topproperties: data,
+                 slideproperties: slides
+            });
         });
-    })
+    });
 });
 
 router.get('/properties', (req, res) => 

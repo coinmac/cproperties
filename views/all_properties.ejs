@@ -42,7 +42,18 @@
                                     <td><%=prop.propertycity%> / <%=prop.propertystate%></td>
                                     <td><%=prop.propertyprice%></td>
                                     <td><%=prop.userid%></td>
-                                    <td><%=prop.viewcategory%></td>
+                                    <td>
+                                        <form action="changepvcat/<%=prop.propertyid%>" method="post">
+                                            <select name="viewcategory" id="viewcategory" class="form-control"  onchange="this.form.submit()">
+                                                <option value="<%=prop.viewcategory%>"><%=prop.viewcategory%></option>
+                                                <option value="Slides">Slides</option>
+                                                <option value="General">General</option>
+                                                <option value="Featured">Featured</option>
+                                                <option value="Premium">Premium</option>
+                                                <option value="Unpublished">Unpublish</option>                                            
+                                            </select>
+                                        </form>
+                                        </td>
                                     <td><%=prop.propertystatus%></td>
                                     <td>
                                         <div class="btn-group">

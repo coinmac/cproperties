@@ -1,12 +1,11 @@
 <div class="slider-area" style="overflow: hidden">
 <div class="slider">
     <div id="bg-slider" class="owl-carousel owl-theme">
-
+        
         <!-- DYNAMIC DISPLAY FEATURED PROPERTIES -->
         <%if(slideproperties.length > 0){ slideproperties.forEach(function(slide){%>
-            <a href="/property/<%=slide.userid%>/<%=slide.propertyid%>"><%=slide.propertyname%>, <%=slide.propertylocation%> - <%=slide.propertyamount%> | <button class="btn btn-inline primary float-right">View Property</button> </a>
-
                 <div class="item">
+                        <a href="/property/<%=slide.userid%>/<%=slide.propertyid%>" class="slideclick"><%=slide.propertyname%>, <%=slide.propertylocation%> &#8358; <%=slide.propertyprice%> <button class="btn btn-inline btn-primary float-right">View Property</button> </a>
                 <img src="users/<%=slide.userid%>/<%=slide.propertyid%>/<%=slide.featuredimg%>">
                 </div>
             
@@ -93,7 +92,7 @@
                     <div class="more-entry overflow">
                         <h5><a href="properties" >CAN'T DECIDE ? </a></h5>
                         <h5 class="tree-sub-ttl">Show all properties</h5>
-                        <button class="btn border-btn more-black" value="All properties">All properties</button>
+                        <a href="properties" ><button class="btn border-btn more-black" value="All properties">All properties</button></a>
                     </div>
                 </div>
             </div>

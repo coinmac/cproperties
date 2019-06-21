@@ -260,7 +260,7 @@ router.post("/submit", upload.array('propertyimages', 10), recaptcha.middleware.
     }
     // Save Amenities
     if(req.body.amenities.length==1 && req.body.amenities[0]!="Add Amenities"){
-        
+
     for (var i = 0; i < req.body.amenities.length; i++) {   
             
         console.log(req.body.amenities[i]);
@@ -561,6 +561,25 @@ router.get('/activate/:userid', (req, res) => {
         req.flash('success_msg', 'You account has been activated. Please login to update your profile and start posting properties!');
         res.redirect('/users/login');
 });
+
+// Change Property View Category
+router.post('/changepvcat/:propertyid', (req, res) => {
+    layout = 'userlayout';
+    const viewcategory = req.body.viewcategory;
+    //From the net
+    Property.findOneAndUpdate({'propertyid' : req.params.propertyid}, { $set: { viewcategory } }, { upsert: true }, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+
+        req.flash('success_msg', 'You have successfully changed the View Cateory of the selected property!');
+        res.redirect('back');
+});
+
+
 //Login Page
 router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha}));
 // Login Handle

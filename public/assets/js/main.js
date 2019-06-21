@@ -242,7 +242,7 @@ $(document).ready(function () {
                    }
                  });
     });
-    
+
 });
 
 $(document).on('click', '.removebtn', function () {
@@ -257,8 +257,6 @@ function adjustsliderRange(){
     $("#price-range").slider('data-slider-max', maxprice);
     $("#price-range").slider('refresh');
 }
-
-// Initializing WOW.JS
 
 function payWithPaystack(){
     var pay_amount = $('#pay_amount').val();
@@ -286,8 +284,10 @@ function payWithPaystack(){
       }
     });
     handler.openIframe();
-  }
+}
 
+  
+// Initializing WOW.JS
 new WOW().init();
 
 

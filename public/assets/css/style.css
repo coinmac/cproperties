@@ -3124,3 +3124,16 @@ datalist option{
     background-image: url('/assets/img/property-1/property3.jpg') !important;
     background-size: cover;
 }
+
+.slideclick{
+    text-align: center;
+    position: absolute;
+    z-index: 999999999999999999;
+    display: block;
+    margin: auto;
+    padding: 10px;
+    background-color: black;
+    width: 50% !important;
+    opacity: 0.7 !important;
+    color: white;
+}
