@@ -35,7 +35,7 @@ const PropertySchema = new mongoose.Schema({
     },
     propertyprice: {
         type: String,
-        required: true
+        required: false
     },
     phonenumber: {
         type: String,

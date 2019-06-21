@@ -260,6 +260,7 @@ router.post("/submit", upload.array('propertyimages', 10), recaptcha.middleware.
     }
     // Save Amenities
     if(req.body.amenities.length==1 && req.body.amenities[0]!="Add Amenities"){
+        
     for (var i = 0; i < req.body.amenities.length; i++) {   
             
         console.log(req.body.amenities[i]);
