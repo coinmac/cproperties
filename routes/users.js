@@ -170,7 +170,7 @@ router.get('/submit', recaptcha.middleware.render, ensureAuthenticated, (req, re
     })
 );
 
-router.post("/submit", upload.array('propertyimages', 10), ensureAuthenticated, (req, res) => {
+router.post("/submit", upload.array('propertyimages', 10), recaptcha.middleware.verify, ensureAuthenticated, (req, res) => {
     if (req.recaptcha.error) { 
         let errors = [];
         errors.push({msg: 'Error in Recaptcha verification'});
