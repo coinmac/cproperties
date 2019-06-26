@@ -516,7 +516,7 @@ router.post('/register', recaptcha.middleware.verify, (req, res) => {
                                     '<title>COINMAC Properties - Welcome</title>'+
                                 '</head>'+
                                 '<body>'+
-                                    '<h2><img src="http://coinmac-properties.com/assets/img/logo.png" height="60" width="auto" alt="COINMAC PROPERTIES"></h2>'+
+                                    '<h2><img src="http://www.coinmac-properties.com/assets/img/logo.png" height="60" width="auto" alt="COINMAC PROPERTIES"></h2>'+
                                     '<h5>Your no 1 Choice for Real Estate Listing</h5>'+
                                     '<hr>'+
                                     '<p> Welcome '+name+', <br>'+
@@ -581,6 +581,76 @@ router.post('/changepvcat/:propertyid', (req, res) => {
         res.redirect('back');
 });
 
+router.get('/forgot_password', recaptcha.middleware.render, (req, res) => res.render('forgot_password', { captcha:res.recaptcha}));
+    // Change Property View Category
+router.post('/forgotpassword', recaptcha.middleware.verify,  (req, res) => {
+    layout = 'userlayout';
+    if (req.recaptcha.error) { 
+        req.flash('error', 'Error in Recaptcha verification');
+        res.redirect('back');
+    }else{
+        User.findOne({ email: req.body.email })
+        .then(userexists => {
+            if(userexists) {            
+                
+                const new_password = rand()+randomstring.generate({length: 5, charset: 'alphanumeric', capitalization: 'lowercase'});
+
+                bcrypt.genSalt(10, (err, salt) => bcrypt.hash(new_password, salt, (error, hash) => {
+                    if(err) throw err;
+                    // Set password to hashed         
+                    const password = hash;
+                    User.findOneAndUpdate({'email' : req.body.email}, { $set: { password } }, { upsert: true }, function(err, data) {
+                    
+                        if (err){
+                            
+                            }
+                        
+                        });
+
+                    const mailOptions = {
+                        from: 'COINMAC Properties <admin@coinmac-properties.com>',
+                        to: req.body.email,
+                        subject: 'Password Recovery Mail',
+                        html: '<!DOCTYPE html>'+
+                            '<html lang="en">'+
+                            '<head>'+
+                            
+                                '<title>COINMAC Properties - Welcome</title>'+
+                            '</head>'+
+                            '<body>'+
+                                '<h2><img src="http://www.coinmac-properties.com/assets/img/logo.png" height="60" width="auto" alt="COINMAC PROPERTIES"></h2>'+
+                                '<h5>Your no 1 Choice for Real Estate Listing</h5>'+
+                                '<hr>'+
+                                '<p> Someone requested for the change of password with your email in our website and we have generated a new password for you. <br>'+                
+                                '<p>Your new Password is : '+new_password+'<br>'+
+                                'Click <a href="http://www.coinmac-properties.com/users/login" style="display: inline-block; padding-left: 5px; padding-right: 5px; background-color: darkblue; color: white; text-align: center;">Here</a> to login with this new password and change this password to your choice by going to Your Profile Page.</p>'+
+                                '<p>Enjoy real estate and property services!</p>'+
+                                '<p>Admin<br>@COINMAC Properties</p>'+
+                            '</body>'+
+                            '</html>'
+                    };
+                
+                    transporter.sendMail(mailOptions, function(error, info){
+                        if (error) {
+                        console.log(error);
+                        } else {
+                        console.log('Email sent: ' + info.response);
+                        }
+                    });
+                    req.flash('success_msg', 'We have sent you a password recovery mail to '+req.body.email);
+                    res.redirect('/users/login');
+                }));  
+
+                
+            }else{
+                // Email does not Exists
+                console.log(userexists);
+                req.flash({'error': 'That Email is not registered!'});
+                res.redirect('back');
+            }
+        });
+    }
+});
 
 //Login Page
 router.get('/login', recaptcha.middleware.render, (req, res) => res.render('login', { captcha:res.recaptcha}));

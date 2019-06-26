@@ -222,9 +222,7 @@ router.get('/contact', recaptcha.middleware.render, (req, res) =>
 router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
 
     if (req.recaptcha.error) { 
-        let errors = [];
-        errors.push({msg: 'Error in Recaptcha verification'});
-        req.flash('success_msg', 'Error in Recaptcha verification');
+        req.flash('error', 'Error in Recaptcha verification');
         res.redirect('back');
     }else{
         const {
