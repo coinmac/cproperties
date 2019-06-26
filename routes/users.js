@@ -57,6 +57,8 @@ const Profile = require("../models/Profile");
 const Photos = require("../models/Photos");
 const Amenities = require("../models/Amenities");
 const Payment = require("../models/Payment");
+const Contact = require("../models/Contact");
+const Favourite = require("../models/Favourite");
 
 const uniqueRandom = require('unique-random');
 const rand = uniqueRandom(100, 999);
@@ -721,6 +723,13 @@ router.get('/all_properties', requiresAdmin(), (req, res) => {
     });
 });
 
+router.get('/my_favourites', requiresAdmin(), (req, res) => {
+    Favourite.find({'userid':req.user.userid }, function(err, favourites) {
+        if(err)
+            return console.log(err);
+    });
+});
+
 router.get('/all_users', requiresAdmin(), (req, res) => {
     Profile.find({}, function(err, usersdata) {
         if(err)
@@ -765,6 +774,69 @@ router.get('/payment/:userid/:payid', (req, res) => {
 
         });
     
+});
+
+// END OF ADMIN ONLY
+router.get('/favourite/:userid/:propertyid', (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+
+    const newFavourite = new Favourite({   
+        userid: req.user.userid,     
+        propertyuid: req.params.userid,
+        propertyid: req.params.propertyid
+    });
+
+    newFavourite.save()    
+    .then( user => {
+        req.flash('success_msg', 'The property has been added to your favourites list');
+        res.redirect('back');
+    })
+    .catch(err => console.log(err));
+    
+    
+});
+
+router.post('/contact_agent/:receiverid/:senderid', recaptcha.middleware.verify,  (req, res) => {
+
+    if (req.recaptcha.error) { 
+        let errors = [];
+        errors.push({msg: 'Error in Recaptcha verification'});
+        res.redirect('back');
+    }else{
+        const {
+            firstname,
+            lastname,
+            email,
+            subject,
+            message,
+            } = req.body;    
+    
+            // Create variables from the Property form
+            const senderid = req.params.senderid; 
+            const receiverid = req.params.receiverid;
+            const status = "New";
+
+            const newContact = new Contact({   
+                senderid,
+                receiverid,
+                firstname,
+                lastname,
+                email,
+                subject,
+                message,
+                datesent,
+                status
+            });
+   
+        newContact.save()    
+        .then( user => {
+            req.flash('success_msg', 'Your message has been successfully sent to the agent');
+            res.redirect('back');
+        })
+        .catch(err => console.log(err));
+    }
 });
 
 router.get('/approve/:payid', (req, res) => {

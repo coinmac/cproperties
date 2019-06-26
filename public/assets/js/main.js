@@ -117,7 +117,7 @@ $(document).ready(function () {
 
         return r;
     }
-
+/*
     $.getJSON("http://coinmac.com.ng/cproperties/wp-json/wp/v2/posts", function(result){
         $.each(result, function(i, field){
             if(i < 5){
@@ -128,7 +128,7 @@ $(document).ready(function () {
             }
         });
     });
-
+*/
     $('#cloneDiv').click(function(){
 
 

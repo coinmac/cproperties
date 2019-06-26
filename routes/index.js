@@ -5,9 +5,16 @@ const Profile = require("../models/Profile");
 const Property = require('../models/Property');
 const Amenities = require('../models/Amenities');
 const Photos = require('../models/Photos');
+const Contact = require('../models/Contact');
 
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
+
+const Recaptcha = require('express-recaptcha').RecaptchaV2;
+
+const recaptcha = new Recaptcha('6Le87qgUAAAAAA91eO824EPaYg9H1mQxhuaGmTQp', '6Le87qgUAAAAAGg0RHQRTYKtY3IR8V5ivMlh0QBv',{callback:'cb'});
+
+
 
 
 //Welcome
@@ -73,7 +80,7 @@ router.post('/properties_search', (req, res) => {
 
 
 
-router.get('/property/:userid/:propertyid', (req, res) => {
+router.get('/property/:userid/:propertyid', recaptcha.middleware.render,  (req, res) => {
     
     if(req.user){
         layout = 'userlayout';
@@ -113,7 +120,8 @@ router.get('/property/:userid/:propertyid', (req, res) => {
                                     udata: userdata,
                                     similar: "",
                                     layout: layout,
-                                    userdata: userinfo              
+                                    userdata: userinfo,
+                                    captcha: res.recaptcha              
                                 });
                             }
                             
@@ -207,9 +215,52 @@ router.get('/agents', (req, res) =>
 );
 
 // Contact Us
-router.get('/contact', (req, res) => 
-    res.render('contact',{layout: 'layout'})
+router.get('/contact', recaptcha.middleware.render, (req, res) => 
+    res.render('contact',{layout: 'layout', captcha: res.recaptcha})
 );
+
+router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
+
+    if (req.recaptcha.error) { 
+        let errors = [];
+        errors.push({msg: 'Error in Recaptcha verification'});
+        req.flash('success_msg', 'Error in Recaptcha verification');
+        res.redirect('back');
+    }else{
+        const {
+            senderid,
+            firstname,
+            lastname,
+            email,
+            subject,
+            message,
+            } = req.body;    
+    
+            // Create variables from the Property form
+            
+            
+            const receiverid = "Administrator";
+            const status = "New";
+
+            const newContact = new Contact({   
+                senderid,
+                receiverid,
+                firstname,
+                lastname,
+                email,
+                subject,
+                message,
+                status
+            });
+   
+        newContact.save()    
+        .then( user => {
+            req.flash('success_msg', 'Your message has been successfully sent to Coinmac Properties');
+            res.redirect('back');
+        })
+        .catch(err => console.log(err));
+    }
+});
 
 router.get('/pricing', (req, res) => 
     res.render('pricing',{layout: 'layout'})
