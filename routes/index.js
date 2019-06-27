@@ -215,9 +215,18 @@ router.get('/agents', (req, res) =>
 );
 
 // Contact Us
-router.get('/contact', recaptcha.middleware.render, (req, res) => 
-    res.render('contact',{layout: 'layout', captcha: res.recaptcha})
-);
+router.get('/contact', recaptcha.middleware.render, (req, res) => {
+    if(req.user){
+        layout = 'userlayout';
+        userinfo = req.user;
+        console.log(req.user);
+    }else{
+        layout = 'layout';
+        userinfo = 'Guest';        
+    }
+    
+    res.render('contact',{layout: layout, captcha: res.recaptcha, userdata: req.user})
+});
 
 router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
 
@@ -227,6 +236,7 @@ router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
     }else{
         const {
             senderid,
+            receiverid,
             firstname,
             lastname,
             email,
@@ -235,9 +245,12 @@ router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
             } = req.body;    
     
             // Create variables from the Property form
-            
-            
-            const receiverid = "Administrator";
+            var receiver = "";
+            if(receiverid!="Administrator"){
+                var receiver = "Agent";
+            }else{
+                var receiver = "Coinmac Properties";
+            }
             const status = "New";
 
             const newContact = new Contact({   
@@ -253,7 +266,7 @@ router.post('/contact_us', recaptcha.middleware.verify,  (req, res) => {
    
         newContact.save()    
         .then( user => {
-            req.flash('success_msg', 'Your message has been successfully sent to Coinmac Properties');
+            req.flash('success_msg', 'Your message has been successfully sent to '+receiver);
             res.redirect('back');
         })
         .catch(err => console.log(err));

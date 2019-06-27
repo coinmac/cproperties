@@ -1,0 +1,90 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">All Properties </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container row" style="width: 100% !important">
+
+            
+
+            <div class="col-md-12">
+                <div class="box-for overflow">
+                        <% include ./partials/messages %>
+                    <%if(allproperties.length > 0){%>
+                    <div class="table-responsive">
+                        <table class="table table-hover"  id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Property Name</th>
+                                    <th>Location</th>
+                                    <th>Price</th>
+                                    <th>Agent</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% allproperties.forEach(function(prop){%>
+
+                                
+                                <tr>
+                                    <td><%=prop.propertyname%></td>
+                                    <td><%=prop.propertycity%> / <%=prop.propertystate%></td>
+                                    <td><%=prop.propertyprice%></td>
+                                    <td><%=prop.userid%></td>
+                                    <td>
+                                        <form action="changepvcat/<%=prop.propertyid%>" method="post">
+                                            <select name="viewcategory" id="viewcategory" class="form-control"  onchange="this.form.submit()">
+                                                <option value="<%=prop.viewcategory%>"><%=prop.viewcategory%></option>
+                                                <option value="Slides">Slides</option>
+                                                <option value="General">General</option>
+                                                <option value="Featured">Featured</option>
+                                                <option value="Premium">Premium</option>
+                                                <option value="Unpublished">Unpublish</option>                                            
+                                            </select>
+                                        </form>
+                                        </td>
+                                    <td><%=prop.propertystatus%></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            
+                                            <a href="deletep/<%=prop.propertyid%>" class="btn btn-danger btn-sm">Delete Favourite</a>
+                                            <a href="/property/<%=prop.userid%>/<%=prop.propertyid%>" target="_blank" class="btn btn-info btn-sm">View</a>
+                                            
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <%})%>
+                            </tbody>
+                            <tfoot>
+                                    <tr>
+                                        <th>Property Name</th>
+                                        <th>Location</th>
+                                        <th>Price</th>
+                                        <th>Agent</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 

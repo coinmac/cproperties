@@ -643,9 +643,8 @@ router.post('/forgotpassword', recaptcha.middleware.verify,  (req, res) => {
 
                 
             }else{
-                // Email does not Exists
-                console.log(userexists);
-                req.flash({'error': 'That Email is not registered!'});
+                // Email does not Exists                
+                req.flash('error', 'That Email is not registered!');
                 res.redirect('back');
             }
         });
@@ -677,9 +676,8 @@ router.post('/login', recaptcha.middleware.verify, (req, res, next) => {
         })(req, res, next);
 
     
-    } else {
-        let errors = [];
-        errors.push({msg: 'You failed the recaptcha verification test!'});
+    } else {        
+        req.flash('error', 'You failed the recaptcha verification test!');
         res.redirect('back');
     }
     
@@ -694,7 +692,7 @@ router.get('/uploadimage', (req, res) =>
 // Logout handle
 router.get('/logout', (req, res) => {
     req.logout();
-    req.flash('success_msg', 'You are now logged out. Log in again?');
+    req.flash('success_msg', 'You are now logged out. Thank you!');
     res.redirect('/users/login');
 });
 // Logout handle
@@ -814,7 +812,7 @@ router.get('/all_users', requiresAdmin(), (req, res) => {
 });
 
 // END OF ADMIN ONLY
-router.get('/payment/:userid/:payid', (req, res) => {
+router.get('/payment/:userid/:payid', ensureAuthenticated, (req, res) => {
 
         layout = 'userlayout';
         userinfo = req.user;
@@ -847,7 +845,7 @@ router.get('/payment/:userid/:payid', (req, res) => {
 });
 
 // END OF ADMIN ONLY
-router.get('/favourite/:userid/:propertyid', (req, res) => {
+router.get('/favourite/:userid/:propertyid', ensureAuthenticated, (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -868,7 +866,7 @@ router.get('/favourite/:userid/:propertyid', (req, res) => {
     
 });
 
-router.post('/contact_agent/:receiverid/:senderid', recaptcha.middleware.verify,  (req, res) => {
+router.post('/contact_agent/:receiverid/:senderid', ensureAuthenticated, recaptcha.middleware.verify,  (req, res) => {
 
     if (req.recaptcha.error) { 
         let errors = [];
@@ -909,7 +907,7 @@ router.post('/contact_agent/:receiverid/:senderid', recaptcha.middleware.verify,
     }
 });
 
-router.get('/approve/:payid', (req, res) => {
+router.get('/approve/:payid', ensureAuthenticated, (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -928,7 +926,7 @@ router.get('/approve/:payid', (req, res) => {
        
 });
 
-router.get('/delete/:payid', (req, res) => {
+router.get('/delete/:payid', ensureAuthenticated, (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -947,7 +945,7 @@ router.get('/delete/:payid', (req, res) => {
        
 });
 
-router.get('/approvep/:propertyid', (req, res) => {
+router.get('/approvep/:propertyid', requiresAdmin(), (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -966,7 +964,7 @@ router.get('/approvep/:propertyid', (req, res) => {
        
 });
 
-router.get('/deletep/:propertyid', (req, res) => {
+router.get('/deletep/:propertyid', requiresAdmin(), (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -984,7 +982,7 @@ router.get('/deletep/:propertyid', (req, res) => {
        
 });
 
-router.get('/approveuser/:userid', (req, res) => {
+router.get('/approveuser/:userid', requiresAdmin(), (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
@@ -1003,11 +1001,10 @@ router.get('/approveuser/:userid', (req, res) => {
        
 });
 
-router.get('/delete/:userid', (req, res) => {
+router.get('/delete/:userid', requiresAdmin(), (req, res) => {
 
     layout = 'userlayout';
     userinfo = req.user;
-    const status = 'Confirmed';
     //From the net
     Profile.findOneAndRemove({'userid' : req.params.userid}, function(err, data) {
        
@@ -1021,5 +1018,125 @@ router.get('/delete/:userid', (req, res) => {
         res.redirect('back');
        
 });
+// Fetch Messages
+router.get('/my_messages', ensureAuthenticated, (req, res) => {
+    var query = {};
+    if(req.user && req.user.isAdmin===false){
+        var query = {'receiverid': req.user.userid};
+
+        console.log(query);
+    }
+
+    Contact.find(query, function(err, data) { 
+        if (err){
+            
+            throw err;
+        } else if (data) {
+            
+            res.render('my_messages', {
+                msg: "",
+                mymessages: data,
+                layout : 'userlayout',
+                userdata: req.user
+            });
+        }
+    })
+});
+router.get('/sent_messages', ensureAuthenticated, (req, res) => {
+    var query = {};
+    if(req.user.isAdmin===false){
+        var query = {'senderid': req.user.userid};
+        console.log(query);
+    }
+
+    Contact.find(query, function(err, data) { 
+        if (err){
+            
+            throw err;
+        } else if (data) {
+            
+            res.render('my_messages', {
+                msg: "",
+                mymessages: data,
+                layout : 'userlayout',
+                userdata: req.user
+            });
+        }
+    })
+});
+
+
+router.get('/my_messages/:msgid', ensureAuthenticated, (req, res) => {
+    const query = {};
+    if(req.user && req.user.isAdmin===false){
+        const query = {'receiverid': req.user.userid};
+    }
+
+    Contact.find(query, function(err, data) { 
+        if (err){
+            
+            throw err;
+        } else if (data) {
+            Contact.find({'_id':req.params.msgid}, function(err, msgdata) { 
+                if (err){
+                    
+                    throw err;
+                } else if (msgdata) {
+                    res.render('my_messages', {
+                        msg: msgdata,
+                        mymessages: data,
+                        layout : 'userlayout',
+                        userdata: req.user
+                    });
+                }
+            });            
+        }
+    });
+    
+});
+
+// Fetch Messages
+router.get('/reply/:msgid/:subject/:receiverid', ensureAuthenticated, (req, res) => {
+    const senderid = req.params.msgid;    
+    const subject = req.params.subject; 
+    const receiverid = req.params.receiverid;    
+    res.render('reply',{layout: 'userlayout', captcha: res.recaptcha, userdata: req.user, senderid: senderid,subject:subject,receiverid:receiverid})
+});
+
+router.get('/deletemessage/:msgid', ensureAuthenticated, (req, res) => {
+
+    layout = 'userlayout';
+    userinfo = req.user;
+    //From the net
+    Contact.findOneAndRemove({'_id' : req.params.msgid}, function(err, data) {
+       
+        if (err){
+            console.log(err);
+            }
+        
+        });
+        
+        req.flash('success_msg', 'The message has been deleted!');
+        res.redirect('back');       
+});
+
+
+// Fetch Messages
+router.get('/my_favourites', ensureAuthenticated, (req, res) => 
+    
+    Favourite.find({'userid': req.user.userid}, function(err, data) { 
+        if (err){
+            
+            throw err;
+        } else if (data) {
+            
+            res.render('my_messages', {
+                
+                myfavourites: data,
+                layout : 'userlayout'
+            });
+        }
+    })
+);
 
 module.exports = router;

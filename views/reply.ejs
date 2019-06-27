@@ -1,0 +1,64 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">Reply Message : <%=subject%> </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <div class="col-md-8 col-md-offset-2"> 
+        <% include ./partials/messages %>
+<h2>Contact form</h2>
+    <form action="/contact_us" method="POST">
+        
+            <input type="hidden" name="senderid" value="<%=userdata.userid %>">
+            <input type="hidden" name="receiverid" value="<%=receiverid %>">
+        
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="firstname">Firstname</label>
+                    <input name="firstname" type="text" class="form-control" id="firstname" value="<%=userdata.name%>">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="lastname">Lastname</label>
+                    <input name="lastname" type="text" class="form-control" id="lastname" value="<%=userdata.lastname%>">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input name="email" type="text" class="form-control" id="email" value="<%=userdata.email%>">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input name="subject" type="text" class="form-control" id="subject" value="Re: <%=subject%>">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea name="message" id="editor" class="form-control editor" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="clearfix">
+                
+                    <span>Verify that you are a human</span>
+                        <div class="g-recaptcha" data-sitekey="6Le87qgUAAAAAA91eO824EPaYg9H1mQxhuaGmTQp"></div>
+            </div>
+           
+            <div class="col-sm-12 text-right">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send message</button>
+            </div>
+        </div>
+        <!-- /.row -->
+    </form>
+</div>

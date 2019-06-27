@@ -1,0 +1,102 @@
+<div class="page-head"> 
+        <div class="container">
+            <div class="row">
+                <div class="page-head-content">
+                    <h1 class="page-title">My Messages </h1>               
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page header -->
+
+
+    <!-- register-area -->
+    <div class="register-area" style="background-color: rgb(249, 249, 249);">
+        <div class="container row" style="width: 100% !important">
+
+            
+
+            <div class="col-md-12">
+                <div class="box-for overflow">
+                        <% include ./partials/messages %>
+                    <%if(mymessages.length > 0){%>
+                    <div class="table-responsive">
+                        <table class="table table-hover"  id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>From</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                   
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% mymessages.forEach(function(msg){%>
+
+                                
+                                <tr>
+                                    <td><%=msg.firstname+' '+msg.lastname%></td>
+                                    <td><%=msg.subject%></td>
+                                    <td><%=msg.datesent%></td>                                    
+                                    
+                                    <td>
+                                        <div class="btn-group">                                            
+                                            <a href="deletemessage/<%=msg._id%>" class="btn btn-danger btn-sm" onclick="confirm('Are you sure you want to delete this message?')">Delete</a>
+                                            <a href="#<%=msg._id%>" id="<%=msg._id%>" data-msgbody="<%=msg.message%>" data-receiverid="<%=msg.senderid%>"  data-msgsubject="<%=msg.subject%>" onclick="showmsgBody('<%=msg._id%>')" class="btn btn-info btn-sm">Read</a>                                            
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="msgbody" id="<%=msg._id%>">
+                                        <%=msg.message%>
+                                    </td>
+                                </tr>
+                                <%})%>
+                            </tbody>
+                            <tfoot>
+                                    <tr>
+                                        <th>Sender</th>
+                                        <th>Subject</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <% }else{%>
+                        <div class="alert alert-info" role="alert">
+                                You have no message(s)!
+                        </div>
+                    <% } %>
+                        
+                </div>
+                
+            </div>
+
+        </div>
+    </div> 
+    
+    <!-- Modal -->
+    
+    <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="msgid" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="msgsubject"></h5>
+                    <h6 id="msgemail"></h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body" id="msgmessage">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="" id="replylink" class="btn btn-primary">Reply</a>
+                </div>
+            </div>
+        </div>
+    </div>

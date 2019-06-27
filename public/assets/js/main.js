@@ -1,8 +1,8 @@
 $(window).load(function () { // makes sure the whole site is loaded
     $('#status').fadeOut(); // will first fade out the loading animation
     $('#preloader').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
-    $('body').delay(350).css({'overflow': 'visible'});
-})
+    $('body').delay(350).css({'overflow': 'visible'});    
+});
 $(document).ready(function () {
     $('input').iCheck({
         checkboxClass: 'icheckbox_square-yellow',
@@ -243,6 +243,34 @@ $(document).ready(function () {
                  });
     });
 
+    /* Read Message
+    $(".readmsg").click(function(){
+
+            var form = $(this);
+            const msgid = this.id;
+
+            $.ajax({
+                type: "POST",
+
+                url: "/users/message/"+msgid,
+                dataType: 'text',
+                success: function(msgdata)
+                {
+                    $("#msgsubject").html(msgdata.subject);                   
+                    $("#msgmessage").html(msgdata.message);
+                    $("#msgemail").html(msgdata.email);
+                }
+                });
+    });
+    */
+
+    $("#agent_form").fadeOut();
+    $(".msgbody").hide();
+
+    $("#contact_agent").click(function(){
+        $("#agent_form").toggle();
+    });
+
 });
 
 $(document).on('click', '.removebtn', function () {
@@ -286,6 +314,16 @@ function payWithPaystack(){
     handler.openIframe();
 }
 
+function showmsgBody(msgid){
+    const msgbody = $("#"+msgid).data('msgbody');
+    const msgsubject = $("#"+msgid).data('msgsubject');
+    const receiverid = $("#"+msgid).data('receiverid');
+    
+    $("#msgmessage").html(msgbody);
+    $("#msgsubject").html(msgsubject);
+    $("#replylink").attr("href", "/users/reply/"+msgid+"/"+msgsubject+"/"+receiverid)
+    $('#msgModal').modal('show');
+}
   
 // Initializing WOW.JS
 new WOW().init();

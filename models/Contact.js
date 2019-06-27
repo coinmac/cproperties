@@ -10,6 +10,6 @@ var contactSchema = new Schema({
     subject: {type: String},
     message: {type: String},
     datesent: {type: Date,default: Date.now},
-    status: {type: String},
+    status: {type: String}
   });
 module.exports = mongoose.model('Contact', contactSchema);

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="page-head-content">
-                <h1 class="page-title">My Uploaded Properties</h1>               
+                <h1 class="page-title">Properties List</h1>               
             </div>
         </div>
     </div>
@@ -14,9 +14,48 @@
     <div class="container">  
         <div class="row">
              
-        
+        <div class="col-md-3 p0 padding-top-40 grow">
+            <div class="blog-asside-right pr0">
+                    <div class="panel panel-default sidebar-menu wow fadeInRight animated" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Search Properties</h3>
+                            </div>
+                            <form action="/properties_search" class="form-inline" method="POST">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <input type="text" class="form-control" placeholder="Key word" name="propertyname">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <input name="propertycity" class="form-control" list="cities" placeholder="Select Location" data-live-search="true" data-live-search-style="begins">                                   
+                                        <datalist id="cities" class="selectpicker cities"  data-live-search="true" data-live-search-style="begins">
+                                            
+                                        </datalist>
+                                    </div>
+                                
+                                    <div class="form-group col-xs-4">                                     
+                                        <select id="basic" class="selectpicker show-tick form-control" name="propertyoffer">
+                                            <option> -Type- </option>
+                                            <option value="For Rent">For Rent</option>
+                                            <option value="For Sale">For Sale</option>
+                                            <option value="Land">Land</option>
+                                            <option value="Short-Let">Short-Let</option>
+                                            <option value="For Lease">For Lease</option>
+                
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-2">
+                                        <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+                                    </div>  
+                                </div>
+                            </form>
+                    </div>
+               
+            </div>
+        </div>
 
-        <div class="col-md-12  pr0 padding-top-40 properties-page">
+        <div class="col-md-9  pr0 padding-top-40 properties-page">
             <div class="col-md-12 clear"> 
                 <div class="col-xs-10 page-subheader sorting pl0">
                     <ul class="sort-by-list">
@@ -58,8 +97,8 @@
             <div class="col-md-12 clear"> 
                 <div id="list-type" class="proerty-th">
 
-                    <% if(myproperties.length > 0){ %>
-                        <% myproperties.forEach(function(property){ %>
+                    <% if(properties.length > 0){ %>
+                        <% properties.forEach(function(property){ %>
                         <div class="col-sm-6 col-md-4 p0">
                             <div class="box-two proerty-item">
                                 <div class="item-thumb">
