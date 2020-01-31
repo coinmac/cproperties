@@ -67,7 +67,7 @@ app.get('*', function(req, res){
     res.status(404).render('404');
 });
 
-const PORT = process.env.PORT || 8200;
+const PORT = process.env.PORT || 80;
 
 app.listen(PORT,'0.0.0.0', function() { console.log(`Server started on port ${PORT}`) });
 
